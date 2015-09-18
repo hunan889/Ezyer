@@ -46,7 +46,11 @@ public class EventInterceptViewPager extends ViewPager {
     }
 
     private boolean isChildIntercept(MotionEvent ev) {
-        Object current = getAdapter().getPrimaryItem();
+        MarkCurrentPagerAdapter adapter = getAdapter();
+        if (adapter == null) {
+            return false;
+        }
+        Object current = adapter.getPrimaryItem();
         return isIntercept(ev, current);
     }
 

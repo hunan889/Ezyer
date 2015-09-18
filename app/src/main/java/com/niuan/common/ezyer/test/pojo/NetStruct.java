@@ -1,13 +1,29 @@
 package com.niuan.common.ezyer.test.pojo;
 
+import com.niuan.common.ezyer.base.annotation.EzyerData;
+
 import java.util.List;
 
 /**
  * Created by Carlos on 2015/9/17.
  */
 public class NetStruct {
+
+    public static final int ID_CODE = 1;
+    public static final int ID_MSG = 2;
+    public static final int ID_LIST = 3;
+    public static final int ID_LIST_NAME = 4;
+    public static final int ID_LIST_PAGE_SIZE = 5;
+    public static final int ID_LIST_PAGE_ACTION = 6;
+    public static final int ID_LIST_ICON = 7;
+
+    @EzyerData(id = ID_CODE)
     private int code;
+
+    @EzyerData(id = ID_MSG)
     private String message;
+
+    @EzyerData(id = ID_LIST)
     private List<Data> data;
 
     public int getCode() {
@@ -35,9 +51,13 @@ public class NetStruct {
     }
 
     public static class Data {
+        @EzyerData(id = ID_LIST_NAME)
         private String name;
+        @EzyerData(id = ID_LIST_PAGE_SIZE)
         private int page_size;
+        @EzyerData(id = ID_LIST_PAGE_ACTION)
         private String action;
+        @EzyerData(id = ID_LIST_ICON)
         private String icon;
 
         public String getName() {
