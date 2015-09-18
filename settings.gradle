@@ -1,1 +1,1 @@
-include ':app', ':ezyerui'
+include ':app', ':ezyerui', ":ezyernet"

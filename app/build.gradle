@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
 //    compile files('libs/universal-image-loader-1.9.1.jar')
     compile project(':ezyerui')
+    compile project(':ezyernet')
 }
