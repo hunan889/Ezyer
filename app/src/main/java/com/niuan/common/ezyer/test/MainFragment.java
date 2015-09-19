@@ -3,18 +3,21 @@ package com.niuan.common.ezyer.test;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.niuan.common.ezyer.R;
 import com.niuan.common.ezyer.base.EzyerEntry;
-import com.niuan.common.ezyer.base.EzyerViewHolder;
-import com.niuan.common.ezyer.base.annotation.EzyerView;
 import com.niuan.common.ezyer.base.fragment.EzyerSimpleFragment;
-import com.niuan.common.ezyer.base.view.adapter.EzyerDataViewAdapter;
+import com.niuan.common.ezyer.net.EzyerParseJsonRequest;
+import com.niuan.common.ezyer.net.ResponseListener;
 import com.niuan.common.ezyer.test.pojo.NetStruct;
-import com.niuan.common.ezyernet.EzyerParseJsonRequest;
-import com.niuan.common.ezyernet.ResponseListener;
+import com.niuan.common.ezyer.ui.annotation.EzyerView;
+import com.niuan.common.ezyer.ui.view.adapter.EzyerDataViewAdapter;
+import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
+import com.yalantis.phoenix.PullToRefreshView;
 
 /**
  * Created by Carlos on 2015/9/14.
@@ -47,6 +50,9 @@ public class MainFragment extends EzyerSimpleFragment {
         @EzyerView(dataId = NetStruct.ID_LIST, resourceId = R.id.customer_products_1)
         ListView mListView;
 
+        @EzyerView(resourceId = R.id.pull_to_refresh)
+        PullToRefreshView mRefreshView;
+
         public TestFragmentViewHolder(View view) {
             super(view);
         }
@@ -57,6 +63,21 @@ public class MainFragment extends EzyerSimpleFragment {
             pair(NetStruct.ID_MSG, R.id.customer_name);
 
             mListView.setAdapter(new MainListAdapter(getView().getContext()));
+
+//            EzyerRefreshView view = new EzyerRefreshView(getView().getContext(), mRefreshView);
+//            view.setView(findViewById(R.id.list_header));
+
+            LinearLayout layout = new LinearLayout(getView().getContext());
+
+            TextView view = new TextView(getView().getContext());
+            view.setText("this is header");
+
+            layout.addView(view);
+            view = new TextView(getView().getContext());
+            view.setText("this is header");
+
+            layout.addView(view);
+            mRefreshView.setCustomHeaderView(layout);
         }
     }
 
@@ -75,53 +96,33 @@ public class MainFragment extends EzyerSimpleFragment {
         mDataViewAdapter = new EzyerDataViewAdapter<>(new TestFragmentViewHolder(getView()));
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        EzyerParseJsonRequest request = new EzyerParseJsonRequest("http://172.19.104.157:8001/SLive/index", new ResponseListener<NetStruct>() {
+    private <T> void request(final EzyerDataViewAdapter<? extends EzyerViewHolder, T> adapter, String url, Class<T> cls) {
+        EzyerParseJsonRequest request = new EzyerParseJsonRequest(url, new ResponseListener<T>() {
             @Override
-            public void onResponse(Request<NetStruct> request, NetStruct response, boolean fromCache) {
+            public void onResponse(Request<T> request, T response, boolean fromCache) {
                 Log.d("MainFragment", "fromCache = " + fromCache);
-                mDataViewAdapter.setData(response);
+                adapter.setData(response);
+                mDataViewAdapter.getHolder().mRefreshView.setRefreshing(false);
             }
-        }, NetStruct.class);
+        }, cls);
         request.setTtl(30000).setSoftTtl(20000).setShouldCache(true);
         request.execute();
 
+    }
 
-//        new JsonExecutor<>(JsonRequest.Method.GET, "http://172.19.104.157:8001/SLive/index", null, new ResponseListener<NetStruct>() {
-//            @Override
-//            public void onResponse(NetStruct response) {
-//
-//                Log.d("MainFragment", "response = " + response);
-//
-//                mDataViewAdapter.setData(response);
-//            }
-//        }, NetStruct.class).execute();
-
-//        User user = new User();
-//        user.setId(1);
-//        user.setName("customer_name");
-//
-//        ItemList userItemList = new ItemList();
-//        userItemList.setId("2");
-//        userItemList.setName("item list for user:" + user.getName());
-//
-//        List<Item> itemList = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            Item item = new Item();
-//            item.setId(i);
-//            item.setName("name" + i);
-//            item.setImg1("http://static.googleadsserving.cn/pagead/imgad?id=CICAgKDT04GiTxCsAhj6ATIIdev4PTDcUv0");
-//            item.setImg2("http://static.googleadsserving.cn/pagead/imgad?id=CICAgKDT04GiTxCsAhj6ATIIdev4PTDcUv0");
-//            item.setImg3("http://static.googleadsserving.cn/pagead/imgad?id=CICAgKDT04GiTxCsAhj6ATIIdev4PTDcUv0");
-//            itemList.add(item);
-//        }
-//        userItemList.setItemList(itemList);
-//        user.setItemWrapper1(userItemList);
-//
-//        user.setItemWrapper2(userItemList);
-//        mDataViewAdapter.setData(user);
+    @Override
+    public void onResume() {
+        super.onResume();
+        String url = "http://192.168.1.101:8080/EzyerServer/json";
+        request(mDataViewAdapter, url, NetStruct.class);
+        mDataViewAdapter.getHolder().mRefreshView.setRefreshing(true);
+        mDataViewAdapter.getHolder().mRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String url = "http://192.168.1.101:8080/EzyerServer/json";
+                request(mDataViewAdapter, url, NetStruct.class);
+                mDataViewAdapter.getHolder().mRefreshView.setRefreshing(true);
+            }
+        });
     }
 }

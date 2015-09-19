@@ -1,6 +1,6 @@
 package com.niuan.common.ezyer.test.pojo;
 
-import com.niuan.common.ezyer.base.annotation.EzyerData;
+import com.niuan.common.ezyer.ui.annotation.EzyerData;
 
 import java.util.List;
 
@@ -94,21 +94,23 @@ public class NetStruct {
 
         @Override
         public String toString() {
-            return "Data{" +
-                    "name='" + name + '\'' +
-                    ", page_size=" + page_size +
-                    ", action='" + action + '\'' +
-                    ", icon='" + icon + '\'' +
-                    '}';
+            final StringBuilder sb = new StringBuilder("{");
+            sb.append("\"action\":\"").append(action).append('\"');
+            sb.append(", \"name\":\"").append(name).append('\"');
+            sb.append(", \"page_size\":").append(page_size);
+            sb.append(", \"icon\":\"").append(icon).append('\"');
+            sb.append('}');
+            return sb.toString();
         }
     }
 
     @Override
     public String toString() {
-        return "NetStruct{" +
-                "code=" + code +
-                ", message='" + message + '\'' +
-                ", data=" + data +
-                '}';
+        final StringBuilder sb = new StringBuilder("{");
+        sb.append("\"code\":").append(code);
+        sb.append(", \"message\":\"").append(message).append('\"');
+        sb.append(", \"data\":").append(data);
+        sb.append('}');
+        return sb.toString();
     }
 }

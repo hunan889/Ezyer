@@ -1,4 +1,4 @@
-<manifest package="com.niuan.common.ezyer.base"
+<manifest package="com.niuan.common.ezyer.ui"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:allowBackup="true"

@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.niuan.common.ezyer.R;
-import com.niuan.common.ezyer.base.EzyerViewHolder;
-import com.niuan.common.ezyer.base.annotation.EzyerView;
-import com.niuan.common.ezyer.base.view.adapter.EzyerListHolderAdapter;
+import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
+import com.niuan.common.ezyer.ui.annotation.EzyerView;
+import com.niuan.common.ezyer.ui.view.adapter.EzyerListHolderAdapter;
 import com.niuan.common.ezyer.test.pojo.Item;
 import com.niuan.common.ezyer.test.pojo.NetStruct;
 

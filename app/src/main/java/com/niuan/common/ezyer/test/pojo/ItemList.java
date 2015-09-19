@@ -1,6 +1,6 @@
 package com.niuan.common.ezyer.test.pojo;
 
-import com.niuan.common.ezyer.base.annotation.EzyerData;
+import com.niuan.common.ezyer.ui.annotation.EzyerData;
 
 import java.util.List;
 
