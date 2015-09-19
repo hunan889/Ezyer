@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
 
+import com.niuan.common.ezyer.ui.util.CollectionUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,15 +37,30 @@ public abstract class EzyerBaseListAdapter<E> extends BaseAdapter {
 
     public void setDataSource(List<E> dataSource) {
         mDataSource.clear();
-        if(dataSource != null) {
+
+        if (!CollectionUtil.isEmpty(dataSource)) {
             mDataSource.addAll(dataSource);
+            notifyDataSetChanged();
+        } else {
+            notifyDataSetInvalidated();
+        }
+    }
+
+    public void addDataSource(List<E> dataSource) {
+        if (CollectionUtil.isEmpty(dataSource)) {
+            return;
         }
 
-        if (dataSource == null) {
-            notifyDataSetInvalidated();
-        } else {
-            notifyDataSetChanged();
+        mDataSource.addAll(dataSource);
+        notifyDataSetChanged();
+    }
+
+    public void addDataSourceFront(List<E> dataSource) {
+        if (CollectionUtil.isEmpty(dataSource)) {
+            return;
         }
+        mDataSource.addAll(0, dataSource);
+        notifyDataSetChanged();
     }
 
     public List<E> getDataSource() {
