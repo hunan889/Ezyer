@@ -30,6 +30,10 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
 
     protected abstract EzyerBaseListAdapter initAdapter();
 
+    public EzyerBaseListAdapter getListAdapter() {
+        return (EzyerBaseListAdapter) mListView.getAdapter();
+    }
+
     @Override
     protected void onInit() {
         super.onInit();

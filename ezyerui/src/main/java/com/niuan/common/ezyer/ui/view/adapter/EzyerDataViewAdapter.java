@@ -44,19 +44,19 @@ public class EzyerDataViewAdapter<HOLDER extends EzyerViewHolder, DATA> {
         bindView(type, mHolder, data, params);
     }
 
-    protected void bindView(RefreshType refreshType, HOLDER holder, DATA data, Object... params) {
+    public void bindView(RefreshType refreshType, HOLDER holder, DATA data, Object... params) {
         bindHolder(refreshType, holder, data);
     }
 
-    protected final void bindView(RefreshType refreshType, View view, Object object) {
+    public final void bindView(RefreshType refreshType, View view, Object object) {
         bindView(refreshType, view, object, null);
     }
 
-    protected final void bindView(RefreshType refreshType, int resId, Object object) {
+    public final void bindView(RefreshType refreshType, int resId, Object object) {
         bindView(refreshType, mHolder.findViewById(resId), object);
     }
 
-    protected final <V extends View, D> void bindView(RefreshType refreshType, V view, D object, EzyerViewBinder<V, D> binder) {
+    public final <V extends View, D> void bindView(RefreshType refreshType, V view, D object, EzyerViewBinder<V, D> binder) {
         if (object != null) {
             Object currentValue = mDataValueMap.get(view.hashCode());
             if (!object.equals(currentValue)) {

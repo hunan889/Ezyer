@@ -22,9 +22,9 @@ public class MainFragmentViewHolder extends EzyerPullListViewHolder {
     @Override
     protected void onInit() {
         super.onInit();
-        pair(NetStruct.ID_CODE, R.id.customer_id);
-        pair(NetStruct.ID_MSG, R.id.customer_name);
-        pair(NetStruct.ID_LIST, R.id.customer_products_1);
+//        pair(NetStruct.ID_CODE, R.id.customer_id);
+//        pair(NetStruct.ID_MSG, R.id.customer_name);
+//        pair(NetStruct.ID_LIST, R.id.customer_products_1);
     }
 
     @Override

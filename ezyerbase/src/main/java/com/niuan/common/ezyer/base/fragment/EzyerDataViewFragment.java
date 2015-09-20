@@ -11,6 +11,8 @@ import com.niuan.common.ezyer.net.ResponseListener;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerDataViewAdapter;
 import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
+import java.util.Objects;
+
 /**
  * Created by Carlos on 2015/9/20.
  */
@@ -26,12 +28,12 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder> exte
 
     private EzyerDataViewAdapter<HOLDER, Object> mAdapter = new EzyerDataViewAdapter<HOLDER, Object>() {
         @Override
-        protected void bindView(RefreshType refreshType, HOLDER holder, Object o, Object... params) {
+        public void bindView(RefreshType refreshType, HOLDER holder, Object o, Object... params) {
             EzyerDataViewFragment.this.bindView(refreshType, holder, o, params);
         }
     };
 
-    protected void bindView(RefreshType refreshType, EzyerViewHolder holder, Object o, Object... params) {
+    protected void bindView(RefreshType refreshType, HOLDER holder, Object o, Object... params) {
         mAdapter.bindHolder(refreshType, holder, o);
     }
 
@@ -49,6 +51,10 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder> exte
         request.setResponseListener(mResponseListener);
         request.setCustomParams(refreshType);
         request.execute();
+    }
+
+    public EzyerDataViewAdapter<HOLDER, Object> getDataViewAdapter() {
+        return mAdapter;
     }
 
 //    public void sendRequest(RefreshType refreshType, EzyerParseJsonRequest<T> request, )

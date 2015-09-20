@@ -17,66 +17,67 @@
 ** limitations under the License.
 */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ezyer="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp">
 
-    <TextView
-        android:id="@+id/text1"
+    <com.niuan.common.ezyer.ui.view.AutoAdjustImageView
+        android:id="@+id/dish_img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/text2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"/>
+        ezyer:adjustType="auto_adjust_height"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_alignParentBottom="true"
+        android:background="#33333333"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="test"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="test"
-            android:textSize="16sp"/>
-
-        <FrameLayout
+            android:id="@+id/dish_name"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="dishname"
+            android:textColor="#ffffffff"
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
-            <ImageView
-                android:id="@+id/img1"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dish_author"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:maxLength="10"
+                android:textColor="#ffaaaaaa"/>
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/dish_method"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:maxLength="10"
+                android:textColor="#ffaaaaaa"/>
 
-                <ImageView
-                    android:id="@+id/img2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RelativeLayout>
-
-            <ImageView
-                android:id="@+id/img3"
-                android:layout_width="30dp"
-                android:layout_height="30dp"/>
-        </FrameLayout>
+            <TextView
+                android:id="@+id/dish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="10"
+                android:textColor="#ffaaaaaa"/>
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+
+</RelativeLayout>
