@@ -22,32 +22,28 @@ public class EzyerJsonObjectRequest extends EzyerJsonRequest<JSONObject> {
      * @param url         URL to fetch the JSON from
      * @param requestBody A {@link String} to post with the request. Null is allowed and
      *                    indicates no parameters will be posted along with request.
-     * @param listener    Listener to receive the JSON response
      */
-    public EzyerJsonObjectRequest(int method, String url, String requestBody,
-                                  ResponseListener<JSONObject> listener) {
-        super(method, url, requestBody, listener);
+    public EzyerJsonObjectRequest(int method, String url, String requestBody) {
+        super(method, url, requestBody);
     }
 
     /**
      * Creates a new request.
      *
-     * @param url      URL to fetch the JSON from
-     * @param listener Listener to receive the JSON response
+     * @param url URL to fetch the JSON from
      */
-    public EzyerJsonObjectRequest(String url, ResponseListener<JSONObject> listener) {
-        super(Method.GET, url, null, listener);
+    public EzyerJsonObjectRequest(String url) {
+        super(Method.GET, url, null);
     }
 
     /**
      * Creates a new request.
      *
-     * @param method   the HTTP method to use
-     * @param url      URL to fetch the JSON from
-     * @param listener Listener to receive the JSON response
+     * @param method the HTTP method to use
+     * @param url    URL to fetch the JSON from
      */
-    public EzyerJsonObjectRequest(int method, String url, ResponseListener<JSONObject> listener) {
-        super(method, url, null, listener);
+    public EzyerJsonObjectRequest(int method, String url) {
+        super(method, url, null);
     }
 
     /**
@@ -57,21 +53,19 @@ public class EzyerJsonObjectRequest extends EzyerJsonRequest<JSONObject> {
      * @param url         URL to fetch the JSON from
      * @param jsonRequest A {@link JSONObject} to post with the request. Null is allowed and
      *                    indicates no parameters will be posted along with request.
-     * @param listener    Listener to receive the JSON response
      */
-    public EzyerJsonObjectRequest(int method, String url, JSONObject jsonRequest,
-                                  ResponseListener<JSONObject> listener) {
-        super(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener);
+    public EzyerJsonObjectRequest(int method, String url, JSONObject jsonRequest) {
+        super(method, url, (jsonRequest == null) ? null : jsonRequest.toString());
     }
 
     /**
      * Constructor which defaults to <code>GET</code> if <code>jsonRequest</code> is
      * <code>null</code>, <code>POST</code> otherwise.
      *
-     * @see #EzyerJsonObjectRequest(int, String, JSONObject, ResponseListener)
+     * @see #EzyerJsonObjectRequest(int, String, JSONObject)
      */
     public EzyerJsonObjectRequest(String url, JSONObject jsonRequest, ResponseListener<JSONObject> listener) {
-        this(jsonRequest == null ? Method.GET : Method.POST, url, jsonRequest, listener);
+        this(jsonRequest == null ? Method.GET : Method.POST, url, jsonRequest);
     }
 
     @Override

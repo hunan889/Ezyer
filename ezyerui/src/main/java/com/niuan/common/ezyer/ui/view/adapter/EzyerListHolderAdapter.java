@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.niuan.common.ezyer.data.RefreshType;
 import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
 /**
@@ -30,7 +31,7 @@ public abstract class EzyerListHolderAdapter<HOLDER extends EzyerViewHolder, DAT
         } else {
             adapter = (EzyerDataViewAdapter<HOLDER, DATA>) convertView.getTag();
         }
-        adapter.setData(getItem(position));
+        adapter.bindData(RefreshType.Replace, getItem(position));
         return convertView;
     }
 
@@ -58,7 +59,9 @@ public abstract class EzyerListHolderAdapter<HOLDER extends EzyerViewHolder, DAT
     }
 
     protected EzyerDataViewAdapter<HOLDER, DATA> createDataViewAdapter(HOLDER holder, int position) {
-        return new EzyerDataViewAdapter<>(holder);
+        EzyerDataViewAdapter<HOLDER, DATA> adapter = new EzyerDataViewAdapter<>();
+        adapter.setHolder(holder);
+        return adapter;
     }
 
     public abstract Class<HOLDER>[] initSupportHolderTypes();

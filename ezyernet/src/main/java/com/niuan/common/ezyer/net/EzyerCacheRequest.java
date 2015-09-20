@@ -12,6 +12,7 @@ public abstract class EzyerCacheRequest<T> extends EzyerRequest<T> {
     private long mTtl = TTL_FROM_HTTP_HEADER;
     private long mSoftTtl = TTL_FROM_HTTP_HEADER;
     private Cache.Entry mConfiguredEntry; // entry configured from server or local
+    private int mExeType = EXE_TYPE_AS_CONFIG;
 
     /**
      * value indicates ttl data is configured by http header
@@ -44,8 +45,8 @@ public abstract class EzyerCacheRequest<T> extends EzyerRequest<T> {
      */
     public static final int EXE_TYPE_AS_CONFIG = 1004;
 
-    public EzyerCacheRequest(int method, String url, ResponseListener<T> listener) {
-        super(method, url, listener);
+    public EzyerCacheRequest(int method, String url) {
+        super(method, url);
     }
 
 
@@ -101,14 +102,7 @@ public abstract class EzyerCacheRequest<T> extends EzyerRequest<T> {
     }
 
     /**
-     * Adds current request to Request Queue using {@link EzyerVolleyManager#add(Request)}<br/> 
-     */
-    public void execute() {
-        execute(EXE_TYPE_AS_CONFIG);
-    }
-
-    /**
-     * Adds current request to Request Queue using {@link EzyerVolleyManager#add(Request)}<br/>
+     * Sets execute type for current request
      * User can customize where the data from by below types:
      * <pre>
      * {@link #EXE_TYPE_AS_CONFIG}
@@ -119,12 +113,19 @@ public abstract class EzyerCacheRequest<T> extends EzyerRequest<T> {
      *
      * @param type where data should be read from
      */
-    public void execute(int type) {
+    public EzyerCacheRequest<T> setExecuteType(int type) {
+        mExeType = type;
+        return this;
+    }
 
-        if (type != EXE_TYPE_AS_CONFIG) {
+    /**
+     * Adds current request to Request Queue using {@link EzyerVolleyManager#add(Request)}<br/>
+     */
+    public void execute() {
+        if (mExeType != EXE_TYPE_AS_CONFIG) {
             Cache.Entry entry = getRealCacheEntry();
             if (entry != null) {
-                configEntry(entry, type);
+                configEntry(entry, mExeType);
                 setRealCacheEntry(entry);
             }
         }

@@ -1,4 +1,4 @@
-package com.niuan.common.ezyer.test;
+package com.niuan.common.ezyer.app;
 
 import android.support.v4.app.Fragment;
 

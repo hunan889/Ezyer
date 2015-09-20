@@ -1,4 +1,4 @@
-package com.niuan.common.ezyer.test;
+package com.niuan.common.ezyer.app;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,8 +8,8 @@ import com.niuan.common.ezyer.R;
 import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 import com.niuan.common.ezyer.ui.annotation.EzyerView;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerListHolderAdapter;
-import com.niuan.common.ezyer.test.pojo.Item;
-import com.niuan.common.ezyer.test.pojo.NetStruct;
+import com.niuan.common.ezyer.app.pojo.Item;
+import com.niuan.common.ezyer.app.pojo.NetStruct;
 
 /**
  * Created by Carlos Liu on 2015/8/15.

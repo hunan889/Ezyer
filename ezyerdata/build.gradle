@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 22
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        minSdkVersion 11
-        targetSdkVersion 21
+        minSdkVersion 8
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -19,9 +19,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile project(':pulltorefreshview')
-    compile project(':ezyerdata')
-    provided 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.1'
 }

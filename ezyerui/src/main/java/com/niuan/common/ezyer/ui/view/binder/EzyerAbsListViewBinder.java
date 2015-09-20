@@ -1,9 +1,9 @@
 package com.niuan.common.ezyer.ui.view.binder;
 
-import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 
+import com.niuan.common.ezyer.data.RefreshType;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerBaseListAdapter;
 
 import java.util.List;
@@ -11,32 +11,35 @@ import java.util.List;
 /**
  * Created by Carlos Liu on 2015/8/15.
  */
-public class EzyerAbsListViewBinder extends EzyerViewBinder<AbsListView> {
+public class EzyerAbsListViewBinder extends EzyerViewBinder<AbsListView, List> {
 
     @Override
-    public boolean bindView(Object obj, View view) {
-        if (view == null) {
+    public boolean bindView(RefreshType refreshType, List obj, AbsListView listView) {
+        if (listView == null) {
             return false;
         }
-        if (!(view instanceof AbsListView)) {
-            return false;
-        }
-        if (!(obj instanceof List)) {
-            return false;
-        }
-
-        AbsListView listView = (AbsListView) view;
         ListAdapter adapter = listView.getAdapter();
+
         if (adapter == null || !(adapter instanceof EzyerBaseListAdapter)) {
             return false;
         }
-        EzyerBaseListAdapter ezyerListAdapter = (EzyerBaseListAdapter) adapter;
-        ezyerListAdapter.setDataSource((List) obj);
-        return true;
-    }
 
-    @Override
-    public Class<AbsListView> getSupportViewClass() {
-        return AbsListView.class;
+        EzyerBaseListAdapter baseListAdapter = (EzyerBaseListAdapter) adapter;
+        switch (refreshType) {
+            case Load: {
+                baseListAdapter.addDataSource(obj);
+                break;
+            }
+            case Update: {
+                baseListAdapter.addDataSourceFront(obj);
+                break;
+            }
+            case Replace:
+            default: {
+                baseListAdapter.setDataSource(obj);
+            }
+        }
+
+        return true;
     }
 }

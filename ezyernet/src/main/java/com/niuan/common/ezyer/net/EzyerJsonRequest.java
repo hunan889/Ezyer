@@ -20,8 +20,8 @@ public abstract class EzyerJsonRequest<T> extends EzyerCacheRequest<T> {
             String.format("application/json; charset=%s", PROTOCOL_CHARSET);
     private final String mRequestBody;
 
-    public EzyerJsonRequest(int method, String url, String requestBody, ResponseListener<T> listener) {
-        super(method, url, listener);
+    public EzyerJsonRequest(int method, String url, String requestBody) {
+        super(method, url);
         mRequestBody = requestBody;
     }
 

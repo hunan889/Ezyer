@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.SparseArray;
 import android.view.View;
 
-import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
+import com.niuan.common.ezyer.data.RefreshType;
 import com.niuan.common.ezyer.ui.annotation.EzyerData;
 import com.niuan.common.ezyer.ui.annotation.EzyerDataType;
 import com.niuan.common.ezyer.ui.reflection.EzyerClass;
@@ -12,6 +12,7 @@ import com.niuan.common.ezyer.ui.reflection.EzyerClassCache;
 import com.niuan.common.ezyer.ui.reflection.EzyerField;
 import com.niuan.common.ezyer.ui.view.binder.EzyerViewBinder;
 import com.niuan.common.ezyer.ui.view.binder.EzyerViewBinderManager;
+import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -21,50 +22,50 @@ import java.util.List;
  */
 public class EzyerDataViewAdapter<HOLDER extends EzyerViewHolder, DATA> {
 
-    private final HOLDER mHolder;
+    private HOLDER mHolder;
     private SparseArray mDataValueMap = new SparseArray();
     private DATA mData;
 
-    public EzyerDataViewAdapter(@NonNull HOLDER holder) {
-        mHolder = holder;
+    public EzyerDataViewAdapter() {
 
-        if (mHolder == null) {
-            throw new RuntimeException("holder cannot be null");
-        }
+    }
+
+    public void setHolder(@NonNull HOLDER holder) {
+        mHolder = holder;
     }
 
     public final HOLDER getHolder() {
         return mHolder;
     }
 
-    public final void setData(DATA data) {
+    public final void bindData(RefreshType type, DATA data, Object... params) {
         mData = data;
 
-        bindView(mHolder, data);
+        bindView(type, mHolder, data, params);
     }
 
-    protected void bindView(HOLDER holder, DATA data) {
-        bindViewInner(holder, data);
+    protected void bindView(RefreshType refreshType, HOLDER holder, DATA data, Object... params) {
+        bindHolder(refreshType, holder, data);
     }
 
-    protected final void bindView(View view, Object object) {
-        bindView(view, object, null);
+    protected final void bindView(RefreshType refreshType, View view, Object object) {
+        bindView(refreshType, view, object, null);
     }
 
-    protected final void bindView(int resId, Object object) {
-        bindView(mHolder.findViewById(resId), object);
+    protected final void bindView(RefreshType refreshType, int resId, Object object) {
+        bindView(refreshType, mHolder.findViewById(resId), object);
     }
 
-    protected final void bindView(View view, Object object, EzyerViewBinder binder) {
+    protected final <V extends View, D> void bindView(RefreshType refreshType, V view, D object, EzyerViewBinder<V, D> binder) {
         if (object != null) {
             Object currentValue = mDataValueMap.get(view.hashCode());
             if (!object.equals(currentValue)) {
-                EzyerViewBinderManager.bindView(view, object, binder);
+                EzyerViewBinderManager.bindView(refreshType, view, object, binder);
             }
         }
     }
 
-    private void bindViewInner(EzyerViewHolder holder, Object data) {
+    public final void bindHolder(RefreshType refreshType, EzyerViewHolder holder, Object data) {
         if (holder == null || data == null) {
             return;
         }
@@ -98,7 +99,7 @@ public class EzyerDataViewAdapter<HOLDER extends EzyerViewHolder, DATA> {
                         }
 
                         if (fieldValue != null) {
-                            bindView(view, fieldValue);
+                            bindView(refreshType, view, fieldValue);
                             mDataValueMap.put(view.hashCode(), fieldValue);
                         }
                     }
@@ -119,7 +120,7 @@ public class EzyerDataViewAdapter<HOLDER extends EzyerViewHolder, DATA> {
                         if (childHolder == null) {
                             continue;
                         }
-                        bindViewInner(childHolder, fieldValue);
+                        bindHolder(refreshType, childHolder, fieldValue);
                     }
                     break;
                 }

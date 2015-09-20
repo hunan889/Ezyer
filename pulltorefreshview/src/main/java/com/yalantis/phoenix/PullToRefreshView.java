@@ -2,7 +2,7 @@ package com.yalantis.phoenix;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
@@ -17,16 +17,10 @@ import android.view.animation.Interpolator;
 import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.yalantis.phoenix.refresh_view.BaseRefreshView;
 import com.yalantis.phoenix.refresh_view.SunRefreshView;
 import com.yalantis.phoenix.util.Utils;
-
-import org.w3c.dom.Text;
-
-import java.security.InvalidParameterException;
 
 public class PullToRefreshView extends ViewGroup {
 
@@ -35,7 +29,7 @@ public class PullToRefreshView extends ViewGroup {
     private static final float DECELERATE_INTERPOLATION_FACTOR = 2f;
 
     public static final int STYLE_SUN = 0;
-    public static final int MAX_OFFSET_ANIMATION_DURATION = 700;
+    public static final int MAX_OFFSET_ANIMATION_DURATION = 500;
 
     private static final int INVALID_POINTER = -1;
 
@@ -93,12 +87,27 @@ public class PullToRefreshView extends ViewGroup {
             default:
 //                throw new InvalidParameterException("Type does not exist");
         }
-        mRefreshView.setBackground(mBaseRefreshView);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            mRefreshView.setBackground(mBaseRefreshView);
+        }
     }
 
     public void setCustomHeaderView(View view) {
         mRefreshView.removeAllViews();
+
+        LayoutParams params = view.getLayoutParams();
+        if (params != null) {
+            if (params.height > mTotalDragDistance || params.height == LayoutParams.MATCH_PARENT) {
+                params.height = mTotalDragDistance;
+            } else {
+                mTotalDragDistance = params.height;
+            }
+        } else {
+            params = new LayoutParams(LayoutParams.MATCH_PARENT, mTotalDragDistance);
+            view.setLayoutParams(params);
+        }
         mRefreshView.addView(view);
+        mRefreshView.setY(-getTotalDragDistance());
     }
 
     public void setRefreshView(BaseRefreshView view) {
@@ -364,7 +373,8 @@ public class PullToRefreshView extends ViewGroup {
         if (percent > 1 || percent < 0) {
             return;
         }
-        mRefreshView.layout(0, 0, getWidth(), (int) (getTotalDragDistance() * percent));
+        int padding = (int) (-getTotalDragDistance() * (1 - percent));
+//        mRefreshView.setPadding(0, 0, 0, padding);
     }
 
     private Animation.AnimationListener mToStartListener = new Animation.AnimationListener() {
@@ -404,6 +414,7 @@ public class PullToRefreshView extends ViewGroup {
 
     private void setTargetOffsetTop(int offset, boolean requiresUpdate) {
         mTarget.offsetTopAndBottom(offset);
+        mRefreshView.offsetTopAndBottom(offset);
         if (mBaseRefreshView != null) {
             mBaseRefreshView.offsetTopAndBottom(offset);
         }
@@ -444,6 +455,9 @@ public class PullToRefreshView extends ViewGroup {
 
         mTarget.layout(left, top + mCurrentOffsetTop, left + width - right, top + height - bottom + mCurrentOffsetTop);
 //        mRefreshView.layout(left, top, left + width - right, top + height - bottom);
+        mRefreshView.layout(left, top + mCurrentOffsetTop, left + width - right, top + height - bottom + mCurrentOffsetTop);
+
+//        mRefreshView.layout(0, 0, getWidth(), getTotalDragDistance());
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {

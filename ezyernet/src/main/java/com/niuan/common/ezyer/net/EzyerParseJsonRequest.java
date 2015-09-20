@@ -24,33 +24,29 @@ public class EzyerParseJsonRequest<T> extends EzyerJsonRequest<T> {
      * @param url         URL to fetch the JSON from
      * @param requestBody A {@link String} to post with the request. Null is allowed and
      *                    indicates no parameters will be posted along with request.
-     * @param listener    Listener to receive the JSON response
      */
-    public EzyerParseJsonRequest(int method, String url, String requestBody,
-                                 ResponseListener<T> listener, Class<T> parseType) {
-        super(method, url, requestBody, listener);
+    public EzyerParseJsonRequest(int method, String url, String requestBody, Class<T> parseType) {
+        super(method, url, requestBody);
         mParseType = parseType;
     }
 
     /**
      * Creates a new request.
      *
-     * @param url      URL to fetch the JSON from
-     * @param listener Listener to receive the JSON response
+     * @param url URL to fetch the JSON from
      */
-    public EzyerParseJsonRequest(String url, ResponseListener<T> listener, Class<T> parseType) {
-        this(Method.GET, url, (String) null, listener, parseType);
+    public EzyerParseJsonRequest(String url, Class<T> parseType) {
+        this(Method.GET, url, (String) null, parseType);
     }
 
     /**
      * Creates a new request.
      *
-     * @param method   the HTTP method to use
-     * @param url      URL to fetch the JSON from
-     * @param listener Listener to receive the JSON response
+     * @param method the HTTP method to use
+     * @param url    URL to fetch the JSON from
      */
-    public EzyerParseJsonRequest(int method, String url, ResponseListener<T> listener, Class<T> parseType) {
-        this(method, url, (String) null, listener, parseType);
+    public EzyerParseJsonRequest(int method, String url, Class<T> parseType) {
+        this(method, url, (String) null, parseType);
     }
 
     /**
@@ -60,21 +56,29 @@ public class EzyerParseJsonRequest<T> extends EzyerJsonRequest<T> {
      * @param url         URL to fetch the JSON from
      * @param jsonRequest A {@link JSONObject} to post with the request. Null is allowed and
      *                    indicates no parameters will be posted along with request.
-     * @param listener    Listener to receive the JSON response
      */
-    public EzyerParseJsonRequest(int method, String url, JSONObject jsonRequest,
-                                 ResponseListener<T> listener, Class<T> parseType) {
-        this(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), listener, parseType);
+    public EzyerParseJsonRequest(int method, String url, JSONObject jsonRequest, Class<T> parseType) {
+        this(method, url, (jsonRequest == null) ? null : jsonRequest.toString(), parseType);
     }
 
     /**
      * Constructor which defaults to <code>GET</code> if <code>jsonRequest</code> is
      * <code>null</code>, <code>POST</code> otherwise.
      *
-     * @see #EzyerParseJsonRequest(int, String, JSONObject, ResponseListener, Class)
+     * @see #EzyerParseJsonRequest(int, String, JSONObject, Class)
      */
-    public EzyerParseJsonRequest(String url, JSONObject jsonRequest, ResponseListener<T> listener, Class<T> parseType) {
-        this(jsonRequest == null ? Method.GET : Method.POST, url, jsonRequest, listener, parseType);
+    public EzyerParseJsonRequest(String url, JSONObject jsonRequest, Class<T> parseType) {
+        this(jsonRequest == null ? Method.GET : Method.POST, url, jsonRequest, parseType);
+    }
+
+    /**
+     * Constructor which defaults to <code>GET</code> if <code>jsonRequest</code> is
+     * <code>null</code>, <code>POST</code> otherwise.
+     *
+     * @see #EzyerParseJsonRequest(int, String, JSONObject, Class)
+     */
+    public EzyerParseJsonRequest(String url, String requestBody, Class<T> parseType) {
+        this(requestBody == null ? Method.GET : Method.POST, url, requestBody, parseType);
     }
 
     @Override

@@ -14,20 +14,17 @@ import com.android.volley.VolleyError;
 public abstract class EzyerRequest<T> extends Request<T> {
 
     private String mCacheKey;
-
+    private Object[] mParams;
     private ResponseListener<T> mResponseListener;
 
     private Cache.Entry mCacheBeforeExecuted;
     private boolean mExpired;
 
-    public EzyerRequest(int method, String url, final ResponseListener<T> listener) {
-        super(method, url, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                listener.onError(error);
-            }
-        });
+    public EzyerRequest(int method, String url) {
+        super(method, url, null);
+    }
 
+    public void setResponseListener(ResponseListener<T> listener) {
         mResponseListener = listener;
     }
 
@@ -35,6 +32,14 @@ public abstract class EzyerRequest<T> extends Request<T> {
     protected void onFinish() {
         super.onFinish();
         mResponseListener = null;
+    }
+
+    @Override
+    public void deliverError(VolleyError error) {
+        super.deliverError(error);
+        if (mResponseListener != null) {
+            mResponseListener.onError(error);
+        }
     }
 
     @Override
@@ -104,5 +109,13 @@ public abstract class EzyerRequest<T> extends Request<T> {
      */
     protected void setRealCacheEntry(Cache.Entry entry) {
         getVolleyManager().setCacheEntry(this, entry);
+    }
+
+    public void setCustomParams(Object... params) {
+        mParams = params;
+    }
+
+    public Object[] getCustomParams() {
+        return mParams;
     }
 }

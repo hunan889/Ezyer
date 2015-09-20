@@ -1,1 +1,1 @@
-include ':app', ':ezyerui', ':ezyerbase', ":ezyernet", ':pulltorefreshview'
+include ':app', ':ezyerui', ':ezyerbase', ':ezyerdata', ":ezyernet", ':pulltorefreshview'

@@ -1,4 +1,4 @@
-package com.niuan.common.ezyer.test.pojo;
+package com.niuan.common.ezyer.app.pojo;
 
 import com.niuan.common.ezyer.ui.annotation.EzyerData;
 import com.niuan.common.ezyer.ui.annotation.EzyerDataType;
