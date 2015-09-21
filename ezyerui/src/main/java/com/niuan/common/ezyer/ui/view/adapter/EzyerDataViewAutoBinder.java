@@ -20,13 +20,13 @@ import java.util.List;
 /**
  * Created by Carlos on 2015/8/14.
  */
-public class EzyerDataViewAdapter<HOLDER extends EzyerViewHolder, DATA> {
+public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
 
+    private DATA mData;
     private HOLDER mHolder;
     private SparseArray mDataValueMap = new SparseArray();
-    private DATA mData;
 
-    public EzyerDataViewAdapter() {
+    public EzyerDataViewAutoBinder() {
 
     }
 

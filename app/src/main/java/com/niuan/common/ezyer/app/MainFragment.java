@@ -4,24 +4,24 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 
+import com.android.volley.Request;
 import com.android.volley.VolleyError;
 import com.niuan.common.ezyer.R;
 import com.niuan.common.ezyer.app.net.DishStructRequest;
-import com.niuan.common.ezyer.app.net.NetStructRequest;
 import com.niuan.common.ezyer.app.pojo.Dish;
 import com.niuan.common.ezyer.base.EzyerEntry;
 import com.niuan.common.ezyer.base.fragment.EzyerDataViewFragment;
 import com.niuan.common.ezyer.data.RefreshType;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerBaseListAdapter;
-import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
-import com.yalantis.phoenix.PullToRefreshView;
+import com.niuan.common.ezyer.ui.view.holder.EzyerPullListViewHolder;
+
+import java.util.ArrayList;
 
 /**
  * Created by Carlos on 2015/9/14.
  */
-public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder> {
+public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, ArrayList<Dish>> implements EzyerPullListViewHolder.PullListViewListener {
     @Override
     protected int getResourceId() {
         return R.layout.fragment_main;
@@ -36,31 +36,12 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder> 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        getViewHolder().setRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                sendRequest(RefreshType.Update, new DishStructRequest());
-            }
-        });
-
-        getViewHolder().getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EzyerBaseListAdapter adapter = (EzyerBaseListAdapter) parent.getAdapter();
-
-                Dish dish = (Dish) adapter.getDataSource().get(position);
-                Uri uri = Uri.parse(dish.getDetailUrl());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
-            }
-        });
-        sendRequest(RefreshType.Replace, new DishStructRequest());
+        requestData(RefreshType.Replace, new DishStructRequest());
     }
 
     @Override
-    public void requestFinish(RefreshType requestType, Object struct, Object... params) {
-        super.requestFinish(requestType, struct, params);
+    public void requestFinish(Request<ArrayList<Dish>> request, RefreshType requestType, ArrayList<Dish> struct) {
+        super.requestFinish(request, requestType, struct);
         getViewHolder().setRefreshing(false);
     }
 
@@ -72,7 +53,9 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder> 
 
     @Override
     protected MainFragmentViewHolder initViewHolder() {
-        return new MainFragmentViewHolder(getView());
+        MainFragmentViewHolder holder = new MainFragmentViewHolder(getView());
+        holder.setPullListViewListener(this);
+        return holder;
     }
 
     @Override
@@ -81,8 +64,26 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder> 
     }
 
     @Override
-    protected void bindView(RefreshType refreshType, MainFragmentViewHolder holder, Object o, Object... params) {
-        super.bindView(refreshType, holder, o, params);
-        getDataViewAdapter().bindView(refreshType, holder.getListView(), o);
+    public void bindData(Request<ArrayList<Dish>> request, RefreshType refreshType, ArrayList<Dish> o) {
+        super.bindData(request, refreshType, o);
+        bindView(request, refreshType, getViewHolder().getListView(), o);
+    }
+
+    @Override
+    public void onRefresh() {
+        requestData(RefreshType.Update, new DishStructRequest());
+    }
+
+    @Override
+    public void onLoading() {
+        requestData(RefreshType.Load, new DishStructRequest());
+    }
+
+    @Override
+    public void onItemClick(EzyerBaseListAdapter adapter, View view, int position) {
+        Dish dish = (Dish) adapter.getDataSource().get(position);
+        Uri uri = Uri.parse(dish.getDetailUrl());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
     }
 }

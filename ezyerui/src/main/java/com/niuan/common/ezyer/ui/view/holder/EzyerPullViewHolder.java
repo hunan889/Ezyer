@@ -11,7 +11,7 @@ import com.yalantis.phoenix.PullToRefreshView;
 /**
  * Created by Carlos on 2015/9/20.
  */
-public class EzyerPullViewHolder extends EzyerViewHolder {
+public class EzyerPullViewHolder extends EzyerViewHolder implements PullToRefreshView.OnRefreshListener {
     private PullToRefreshView mPullToRefreshView;
 
     public EzyerPullViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
@@ -29,14 +29,9 @@ public class EzyerPullViewHolder extends EzyerViewHolder {
 
         if (mPullToRefreshView != null) {
             mPullToRefreshView.setCustomHeaderView(initRefreshingView(getView().getContext(), mPullToRefreshView));
+            mPullToRefreshView.setOnRefreshListener(this);
         }
 
-    }
-
-    public void setRefreshListener(PullToRefreshView.OnRefreshListener listener) {
-        if (mPullToRefreshView != null) {
-            mPullToRefreshView.setOnRefreshListener(listener);
-        }
     }
 
     public void setRefreshing(boolean refreshing) {
@@ -55,5 +50,10 @@ public class EzyerPullViewHolder extends EzyerViewHolder {
 
     public PullToRefreshView getPullToRefreshView() {
         return mPullToRefreshView;
+    }
+
+    @Override
+    public void onRefresh() {
+
     }
 }

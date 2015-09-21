@@ -20,7 +20,7 @@ public abstract class EzyerListHolderAdapter<HOLDER extends EzyerViewHolder, DAT
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        EzyerDataViewAdapter<HOLDER, DATA> adapter;
+        EzyerDataViewAutoBinder<HOLDER, DATA> adapter;
         if (convertView == null) {
             HOLDER holder = createHolder(parent, position);
             adapter = createDataViewAdapter(holder, position);
@@ -29,7 +29,7 @@ public abstract class EzyerListHolderAdapter<HOLDER extends EzyerViewHolder, DAT
                 convertView.setTag(adapter);
             }
         } else {
-            adapter = (EzyerDataViewAdapter<HOLDER, DATA>) convertView.getTag();
+            adapter = (EzyerDataViewAutoBinder<HOLDER, DATA>) convertView.getTag();
         }
         adapter.bindData(RefreshType.Replace, getItem(position));
         return convertView;
@@ -58,8 +58,8 @@ public abstract class EzyerListHolderAdapter<HOLDER extends EzyerViewHolder, DAT
         return EzyerViewHolder.initial(getHolderType(position), mInflater, parent, false);
     }
 
-    protected EzyerDataViewAdapter<HOLDER, DATA> createDataViewAdapter(HOLDER holder, int position) {
-        EzyerDataViewAdapter<HOLDER, DATA> adapter = new EzyerDataViewAdapter<>();
+    protected EzyerDataViewAutoBinder<HOLDER, DATA> createDataViewAdapter(HOLDER holder, int position) {
+        EzyerDataViewAutoBinder<HOLDER, DATA> adapter = new EzyerDataViewAutoBinder<>();
         adapter.setHolder(holder);
         return adapter;
     }
