@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
+import com.android.volley.VolleyError;
 import com.niuan.common.ezyer.R;
 import com.niuan.common.ezyer.app.net.DishStructRequest;
 import com.niuan.common.ezyer.app.net.NetStructRequest;
@@ -60,6 +61,12 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder> 
     @Override
     public void requestFinish(RefreshType requestType, Object struct, Object... params) {
         super.requestFinish(requestType, struct, params);
+        getViewHolder().setRefreshing(false);
+    }
+
+    @Override
+    public void requestError(VolleyError error) {
+        super.requestError(error);
         getViewHolder().setRefreshing(false);
     }
 

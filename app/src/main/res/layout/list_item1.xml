@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#33333333"
+        android:background="#33000000"
         android:orientation="vertical"
         android:padding="10dp">
 
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:maxLength="10"
-                android:textColor="#ffaaaaaa"/>
+                android:textColor="#ffefefef"/>
 
             <TextView
                 android:id="@+id/dish_method"
@@ -67,14 +67,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:maxLength="10"
-                android:textColor="#ffaaaaaa"/>
+                android:textColor="#ffefefef"/>
 
             <TextView
                 android:id="@+id/dish_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLength="10"
-                android:textColor="#ffaaaaaa"/>
+                android:textColor="#ffefefef"/>
         </LinearLayout>
 
     </LinearLayout>

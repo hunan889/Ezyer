@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.android.volley.Request;
+import com.android.volley.VolleyError;
 import com.niuan.common.ezyer.data.RefreshType;
 import com.niuan.common.ezyer.net.EzyerParseJsonRequest;
 import com.niuan.common.ezyer.net.EzyerRequest;
@@ -23,6 +24,12 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder> exte
         public void onResponse(Request request, Object response, boolean fromCache) {
             RefreshType refreshType = (RefreshType) ((EzyerParseJsonRequest) request).getCustomParams()[0];
             requestFinish(refreshType, response);
+        }
+
+        @Override
+        public void onError(VolleyError error) {
+            super.onError(error);
+            requestError(error);
         }
     };
 
@@ -45,6 +52,10 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder> exte
 
     public void requestFinish(RefreshType requestType, Object data, Object... params) {
         mAdapter.bindData(requestType, data, params);
+    }
+
+    public void requestError(VolleyError error) {
+
     }
 
     public void sendRequest(RefreshType refreshType, EzyerRequest request) {
