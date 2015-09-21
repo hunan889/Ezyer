@@ -21,10 +21,6 @@ public class MainListAdapter extends EzyerListHolderAdapter<EzyerViewHolder, Net
     public static class ListHolder1 extends EzyerViewHolder {
         public ListHolder1(LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
             super(inflater, parent, attachToParent);
-        }
-
-        @Override
-        protected void onInit() {
             pair(Dish.ID_AUTHOR, R.id.dish_author);
             pair(Dish.ID_IMG, R.id.dish_img);
             pair(Dish.ID_METHOD, R.id.dish_method);

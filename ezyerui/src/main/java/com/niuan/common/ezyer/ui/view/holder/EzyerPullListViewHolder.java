@@ -28,10 +28,12 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
 
     public EzyerPullListViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
         super(inflater, parent, attachToParent);
+        init();
     }
 
     public EzyerPullListViewHolder(View view) {
         super(view);
+        init();
     }
 
     public interface PullListViewListener {
@@ -54,9 +56,7 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
         return (EzyerBaseListAdapter) mListView.getAdapter();
     }
 
-    @Override
-    protected void onInit() {
-        super.onInit();
+    private void init() {
         mListView = findViewById(initListViewId());
         if (mListView == null) {
             return;
