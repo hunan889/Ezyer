@@ -6,11 +6,10 @@ import android.view.ViewGroup;
 
 import com.niuan.common.ezyer.R;
 import com.niuan.common.ezyer.app.pojo.Dish;
-import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
+import com.niuan.common.ezyer.app.pojo.NetStruct;
 import com.niuan.common.ezyer.ui.annotation.EzyerView;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerListHolderAdapter;
-import com.niuan.common.ezyer.app.pojo.Item;
-import com.niuan.common.ezyer.app.pojo.NetStruct;
+import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
 /**
  * Created by Carlos Liu on 2015/8/15.
@@ -21,10 +20,6 @@ public class MainListAdapter extends EzyerListHolderAdapter<EzyerViewHolder, Net
     public static class ListHolder1 extends EzyerViewHolder {
         public ListHolder1(LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
             super(inflater, parent, attachToParent);
-        }
-
-        @Override
-        protected void onInit() {
             pair(Dish.ID_AUTHOR, R.id.dish_author);
             pair(Dish.ID_IMG, R.id.dish_img);
             pair(Dish.ID_METHOD, R.id.dish_method);

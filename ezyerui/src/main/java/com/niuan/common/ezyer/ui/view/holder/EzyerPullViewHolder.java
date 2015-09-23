@@ -23,15 +23,13 @@ public class EzyerPullViewHolder extends EzyerViewHolder implements PullToRefres
         super(view);
         init();
     }
-
-    protected void init() {
+    private void init() {
         mPullToRefreshView = findViewById(initPullViewId());
 
         if (mPullToRefreshView != null) {
             mPullToRefreshView.setCustomHeaderView(initRefreshingView(getView().getContext(), mPullToRefreshView));
             mPullToRefreshView.setOnRefreshListener(this);
         }
-
     }
 
     public void setRefreshing(boolean refreshing) {
