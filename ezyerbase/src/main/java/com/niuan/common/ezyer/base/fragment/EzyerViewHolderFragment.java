@@ -22,17 +22,17 @@ public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewHolder = initViewHolder();
+        mViewHolder = initRootViewHolder();
     }
 
-    protected abstract T initViewHolder();
+    protected abstract T initRootViewHolder();
 
     protected T getViewHolder() {
         return mViewHolder;
     }
     public <V extends View> V findViewById(int id) {
         if (mViewHolder == null) {
-            mViewHolder = initViewHolder();
+            mViewHolder = initRootViewHolder();
         }
         if (mViewHolder == null) {
             return null;

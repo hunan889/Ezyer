@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.niuan.common.ezyer.R;
-import com.niuan.common.ezyer.app.pojo.NetStruct;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerBaseListAdapter;
 import com.niuan.common.ezyer.ui.view.holder.EzyerPullListViewHolder;
 import com.yalantis.phoenix.PullToRefreshView;
@@ -17,14 +16,6 @@ public class MainFragmentViewHolder extends EzyerPullListViewHolder {
 
     public MainFragmentViewHolder(View view) {
         super(view);
-    }
-
-    @Override
-    protected void onInit() {
-        super.onInit();
-//        pair(NetStruct.ID_CODE, R.id.customer_id);
-//        pair(NetStruct.ID_MSG, R.id.customer_name);
-//        pair(NetStruct.ID_LIST, R.id.customer_products_1);
     }
 
     @Override

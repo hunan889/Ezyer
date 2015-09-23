@@ -14,7 +14,7 @@ import com.niuan.common.ezyer.ui.view.adapter.EzyerBaseListAdapter;
 /**
  * Created by Carlos on 2015/9/20.
  */
-public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
+public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder implements AbsListView.OnScrollListener, View.OnTouchListener {
     private ListView mListView;
     private PullListViewListener mPullListViewListener;
 
@@ -28,10 +28,12 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
 
     public EzyerPullListViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
         super(inflater, parent, attachToParent);
+        init();
     }
 
     public EzyerPullListViewHolder(View view) {
         super(view);
+        init();
     }
 
     public interface PullListViewListener {
@@ -54,9 +56,7 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
         return (EzyerBaseListAdapter) mListView.getAdapter();
     }
 
-    @Override
-    protected void onInit() {
-        super.onInit();
+    private void init() {
         mListView = findViewById(initListViewId());
         if (mListView == null) {
             return;
@@ -71,55 +71,8 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
                 }
             }
         });
-        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE
-                        && (isLoadingEnabled())
-                        && (view.getLastVisiblePosition() >= view.getCount() - 1)
-                        && mDirection == DIRECTION_UP) {
-                    if (mPullListViewListener != null) {
-                        mPullListViewListener.onLoading();
-                    }
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-        mListView.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent ev) {
-
-                int currentY = (int) ev.getY();
-                int action = ev.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN: {
-                        mLastY = currentY;
-                        break;
-                    }
-                    case MotionEvent.ACTION_MOVE: {
-                        if (mLastY - currentY > OFFSET_SCROLL) {
-                            // Log.d(TAG, "mDirection = DIRECTION_UP");
-                            mDirection = DIRECTION_UP;
-                        } else if (mLastY - currentY < -OFFSET_SCROLL) {
-                            // Log.d(TAG, "mDirection = DIRECTION_DOWN");
-                            mDirection = DIRECTION_DOWN;
-                        }
-                        mLastY = currentY;
-                        break;
-                    }
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        break;
-                }
-                return false;
-            }
-        });
+        mListView.setOnScrollListener(this);
+        mListView.setOnTouchListener(this);
     }
 
     public ListView getListView() {
@@ -141,4 +94,49 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder {
         return true;
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        int currentY = (int) event.getY();
+        int action = event.getAction();
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN: {
+                mLastY = currentY;
+                break;
+            }
+            case MotionEvent.ACTION_MOVE: {
+                if (mLastY - currentY > OFFSET_SCROLL) {
+                    // Log.d(TAG, "mDirection = DIRECTION_UP");
+                    mDirection = DIRECTION_UP;
+                } else if (mLastY - currentY < -OFFSET_SCROLL) {
+                    // Log.d(TAG, "mDirection = DIRECTION_DOWN");
+                    mDirection = DIRECTION_DOWN;
+                }
+                mLastY = currentY;
+                break;
+            }
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (scrollState == SCROLL_STATE_IDLE
+                && (isLoadingEnabled())
+                && (view.getLastVisiblePosition() >= view.getCount() - 1)
+                && mDirection == DIRECTION_UP) {
+            if (mPullListViewListener != null) {
+                mPullListViewListener.onLoading();
+            }
+        }
+    }
 }

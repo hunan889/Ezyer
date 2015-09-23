@@ -16,15 +16,15 @@ public class EzyerPullViewHolder extends EzyerViewHolder implements PullToRefres
 
     public EzyerPullViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
         super(inflater, parent, attachToParent);
+        init();
     }
 
     public EzyerPullViewHolder(View view) {
         super(view);
+        init();
     }
 
-    @Override
-    protected void onInit() {
-        super.onInit();
+    protected void init() {
         mPullToRefreshView = findViewById(initPullViewId());
 
         if (mPullToRefreshView != null) {

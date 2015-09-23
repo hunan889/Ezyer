@@ -60,5 +60,4 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder, DATA
         request.setCustomParams(refreshType);
         request.execute();
     }
-
 }

@@ -48,10 +48,6 @@ public class EzyerViewHolder {
     private void init(View view) {
         mRootView = view;
         fillEzyerViewField(view);
-        onInit();
-    }
-
-    protected void onInit() {
     }
 
     public final void pair(int dataId, int resId) {

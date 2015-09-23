@@ -18,7 +18,9 @@ public abstract class EzyerRequest<T> extends Request<T> {
     private ResponseListener<T> mResponseListener;
 
     private Cache.Entry mCacheBeforeExecuted;
-    private boolean mExpired;
+    private boolean mExpiredBeforeExecuted;
+
+    private boolean mIsRunning;
 
     public EzyerRequest(int method, String url) {
         super(method, url, null);
@@ -47,12 +49,26 @@ public abstract class EzyerRequest<T> extends Request<T> {
         if (mResponseListener != null) {
             boolean fromCache = false;
             if (shouldCache()) {
-                if (mExpired) {
+                /*
+                 If not expired before execute, means request will be read from cache if 
+                 soft ttl not expired, or from net otherwise.
+                 
+                 If expired, the request will be read from net
+                 */
+                if (mExpiredBeforeExecuted) {
                     fromCache = false;
                 } else {
                     Cache.Entry realCacheEntry = getRealCacheEntry();
                     if (realCacheEntry != null) {
-                        fromCache = mCacheBeforeExecuted.ttl == realCacheEntry.ttl && mCacheBeforeExecuted.softTtl == realCacheEntry.softTtl;
+                        /*
+                         To check if data from local or net, need to check if these two cache's ttl 
+                         and  soft ttl matches.
+                         
+                         If request from net, the cache's ttl and soft ttl will be updated.
+                          */
+
+                        fromCache = mCacheBeforeExecuted.ttl == realCacheEntry.ttl
+                                && mCacheBeforeExecuted.softTtl == realCacheEntry.softTtl;
                     }
                 }
             }
@@ -85,7 +101,7 @@ public abstract class EzyerRequest<T> extends Request<T> {
 
     public void execute() {
         mCacheBeforeExecuted = getRealCacheEntry();
-        mExpired = (mCacheBeforeExecuted == null || mCacheBeforeExecuted.isExpired());
+        mExpiredBeforeExecuted = (mCacheBeforeExecuted == null || mCacheBeforeExecuted.isExpired());
         getVolleyManager().add(this);
     }
 
@@ -99,7 +115,7 @@ public abstract class EzyerRequest<T> extends Request<T> {
      * @return
      */
     protected Cache.Entry getRealCacheEntry() {
-        return getVolleyManager().getCacheEntry(this);
+        return getVolleyManager().getCacheEntry(getCacheKey());
     }
 
     /**
@@ -108,7 +124,7 @@ public abstract class EzyerRequest<T> extends Request<T> {
      * @param entry
      */
     protected void setRealCacheEntry(Cache.Entry entry) {
-        getVolleyManager().setCacheEntry(this, entry);
+        getVolleyManager().setCacheEntry(getCacheKey(), entry);
     }
 
     public void setCustomParams(Object... params) {
@@ -118,4 +134,9 @@ public abstract class EzyerRequest<T> extends Request<T> {
     public Object[] getCustomParams() {
         return mParams;
     }
+
+    public boolean isRunning() {
+        return mIsRunning;
+    }
+
 }

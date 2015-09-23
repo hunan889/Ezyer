@@ -34,12 +34,24 @@ public class EzyerVolleyManager {
         return sInstance;
     }
 
-    public Cache.Entry getCacheEntry(Request request) {
-        return mRequestQueue.getCache().get(request.getCacheKey());
+    /**
+     * Get cache for this key
+     *
+     * @param cacheKey
+     * @return cache entry get from request queue
+     */
+    public Cache.Entry getCacheEntry(String cacheKey) {
+        return mRequestQueue.getCache().get(cacheKey);
     }
 
-    public void setCacheEntry(Request request, Cache.Entry entry) {
-        mRequestQueue.getCache().put(request.getCacheKey(), entry);
+    /**
+     * Set cache key for this key to local file
+     *
+     * @param cacheKey
+     * @param entry    cache entry for this key
+     */
+    public void setCacheEntry(String cacheKey, Cache.Entry entry) {
+        mRequestQueue.getCache().put(cacheKey, entry);
     }
 
     public void add(Request request) {
