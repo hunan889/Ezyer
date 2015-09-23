@@ -17,4 +17,9 @@ public class EzyerCheckBoxBinder extends EzyerViewBinder<CheckBox, Boolean> {
         view.setChecked(obj);
         return true;
     }
+
+    @Override
+    public Boolean getData(CheckBox view) {
+        return view.isChecked();
+    }
 }

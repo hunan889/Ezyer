@@ -42,4 +42,15 @@ public class EzyerAbsListViewBinder extends EzyerViewBinder<AbsListView, List> {
 
         return true;
     }
+
+    @Override
+    public List getData(AbsListView view) {
+        ListAdapter adapter = view.getAdapter();
+        if (adapter == null || !(adapter instanceof EzyerBaseListAdapter)) {
+            return null;
+        }
+        EzyerBaseListAdapter ezyerListAdapter = (EzyerBaseListAdapter) adapter;
+
+        return ezyerListAdapter.getDataSource();
+    }
 }

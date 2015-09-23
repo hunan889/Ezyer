@@ -2,7 +2,9 @@ package com.niuan.common.ezyer.app.pojo;
 
 import com.niuan.common.ezyer.ui.annotation.EzyerData;
 
-public class Dish {
+import java.io.Serializable;
+
+public class Dish implements Serializable {
 
     public static final int ID_IMG = 1;
     public static final int ID_NAME = 2;

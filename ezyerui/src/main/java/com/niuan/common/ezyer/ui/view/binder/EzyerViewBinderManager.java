@@ -48,6 +48,16 @@ public class EzyerViewBinderManager {
         return binder.bindView(refreshType, fieldValue, view);
     }
 
+    public static <V extends View, D> D getDataFromView(V view, EzyerViewBinder<V, D> binder) {
+        if (binder == null) {
+            binder = getBinder(view.getClass());
+        }
+        if (binder == null) {
+            return null;
+        }
+        return binder.getData(view);
+    }
+
     public static EzyerViewBinder getBinder(Class<?> cls) {
         EzyerViewBinder binder = mDefaultBinderMap.get(cls);
         if (binder == null) {

@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, ArrayList<Dish>> implements EzyerPullListViewHolder.PullListViewListener {
     @Override
-    protected int getResourceId() {
+    protected int getRootLayoutId() {
         return R.layout.fragment_main;
     }
 
@@ -34,9 +34,10 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        requestData(RefreshType.Replace, new DishStructRequest());
+    public void onVisibleToUser() {
+        if (!hasData()) {
+            requestData(RefreshType.Replace, new DishStructRequest());
+        }
     }
 
     @Override
@@ -59,14 +60,38 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void bindData(Request<ArrayList<Dish>> request, RefreshType refreshType, ArrayList<Dish> data) {
+        super.bindData(request, refreshType, data);
+        bindView(request, refreshType, getViewHolder().getListView(), data);
     }
 
     @Override
-    public void bindData(Request<ArrayList<Dish>> request, RefreshType refreshType, ArrayList<Dish> o) {
-        super.bindData(request, refreshType, o);
-        bindView(request, refreshType, getViewHolder().getListView(), o);
+    protected ArrayList<Dish> updateCache(RefreshType refreshType, ArrayList<Dish> oldData, ArrayList<Dish> newData) {
+        ArrayList<Dish> returnData = oldData;
+        if (returnData == null) {
+            returnData = new ArrayList<>();
+        }
+        switch (refreshType) {
+            case Load: {
+                returnData.addAll(newData);
+                break;
+            }
+            case Replace: {
+                returnData.clear();
+                if (newData != null) {
+                    returnData.addAll(newData);
+                }
+                break;
+            }
+            case Update: {
+                if (returnData != null) {
+                    returnData.addAll(0, newData);
+                }
+                break;
+            }
+        }
+
+        return returnData;
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.niuan.common.ezyer.ui.view.binder.EzyerViewBinderManager;
 import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
 
     private DATA mData;
     private HOLDER mHolder;
+    private HashMap<String, DATA> mDataCache = new HashMap<>();
     private SparseArray mDataValueMap = new SparseArray();
 
     public EzyerDataViewAutoBinder() {
@@ -38,13 +40,15 @@ public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
         return mHolder;
     }
 
-    public final void bindData(RefreshType type, DATA data, Object... params) {
+    public final void bindData(String key, RefreshType type, DATA data) {
         mData = data;
 
-        bindView(type, mHolder, data, params);
+        mDataCache.put(key, data);
+
+        bindView(type, mHolder, data);
     }
 
-    public void bindView(RefreshType refreshType, HOLDER holder, DATA data, Object... params) {
+    public void bindView(RefreshType refreshType, HOLDER holder, DATA data) {
         bindHolder(refreshType, holder, data);
     }
 

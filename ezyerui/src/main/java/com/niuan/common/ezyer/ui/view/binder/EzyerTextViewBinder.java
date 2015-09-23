@@ -9,6 +9,8 @@ import com.niuan.common.ezyer.data.RefreshType;
  * Created by Carlos Liu on 2015/8/15.
  */
 public class EzyerTextViewBinder extends EzyerViewBinder<TextView, Object> {
+    private static final int TAG_TEXT_CONTENT = 1001;
+
     @Override
     public boolean bindView(RefreshType refreshType, Object obj, TextView view) {
         if (view == null) {
@@ -20,6 +22,12 @@ public class EzyerTextViewBinder extends EzyerViewBinder<TextView, Object> {
         } else {
             view.setText(obj == null ? "" : obj.toString());
         }
+        view.setTag(TAG_TEXT_CONTENT, obj);
         return true;
+    }
+
+    @Override
+    public Object getData(TextView view) {
+        return view.getTag(TAG_TEXT_CONTENT);
     }
 }

@@ -14,8 +14,8 @@ public abstract class EzyerSimpleFragment<T extends EzyerViewHolder> extends Ezy
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(getResourceId(), container, false);
+        return inflater.inflate(getRootLayoutId(), container, false);
     }
 
-    protected abstract int getResourceId();
+    protected abstract int getRootLayoutId();
 }
