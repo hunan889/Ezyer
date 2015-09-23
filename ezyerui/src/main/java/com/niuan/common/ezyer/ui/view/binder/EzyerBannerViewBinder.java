@@ -28,17 +28,4 @@ public class EzyerBannerViewBinder extends EzyerViewBinder<BaseBannerView, List>
         ezyerListAdapter.setDataSource((List) obj);
         return true;
     }
-
-
-    @Override
-    public List getData(BaseBannerView view) {
-
-        ListAdapter adapter = view.getListAdapter();
-        if (adapter == null || !(adapter instanceof EzyerBaseListAdapter)) {
-            return null;
-        }
-        EzyerBaseListAdapter ezyerListAdapter = (EzyerBaseListAdapter) adapter;
-
-        return ezyerListAdapter.getDataSource();
-    }
 }

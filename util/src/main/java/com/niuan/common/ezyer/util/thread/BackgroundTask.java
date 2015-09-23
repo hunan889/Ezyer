@@ -1,7 +1,7 @@
-package com.niuan.common.ezyer.ui.util.dl.thread;
+package com.niuan.common.ezyer.util.thread;
 
 /**
- * SyncBackgroundTask是在后台运行的任务，该任务会根据executorId的不同被安排在不同线程，
+ * BackgroundTask是在后台运行的任务，该任务会根据executorId的不同被安排在不同线程，
  * 相同executorId的任务会运行在相同的线程，并且根据execute调用方法的先后顺序而进行排队，先调用的会先执行
  *
  * @author carlosliu

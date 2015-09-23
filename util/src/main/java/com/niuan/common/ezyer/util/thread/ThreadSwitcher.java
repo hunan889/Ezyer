@@ -1,6 +1,6 @@
-package com.niuan.common.ezyer.ui.util.dl.thread;
+package com.niuan.common.ezyer.util.thread;
 
-public class ThreadSwitcher {
+class ThreadSwitcher {
 	public void pause() {
 		synchronized (this) {
 			try {

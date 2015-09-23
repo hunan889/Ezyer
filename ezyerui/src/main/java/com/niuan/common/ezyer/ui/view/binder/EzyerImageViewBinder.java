@@ -14,13 +14,6 @@ public class EzyerImageViewBinder extends EzyerViewBinder<ImageView, String> {
     @Override
     public boolean bindView(RefreshType refreshType, String obj, ImageView view) {
         ImageLoader.getInstance().displayImage(obj, view);
-        view.setTag(TAG_IMG_URL, obj);
         return true;
-    }
-
-    @Override
-    public String getData(ImageView view) {
-        String tag = (String) view.getTag(TAG_IMG_URL);
-        return tag == null ? "" : tag;
     }
 }

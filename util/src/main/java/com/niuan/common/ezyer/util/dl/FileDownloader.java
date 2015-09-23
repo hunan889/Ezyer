@@ -1,8 +1,8 @@
-package com.niuan.common.ezyer.ui.util.dl;
+package com.niuan.common.ezyer.util.dl;
 
 import android.util.Log;
 
-import com.niuan.common.ezyer.ui.util.dl.thread.LimitedThreadBackgroundTask;
+import com.niuan.common.ezyer.util.thread.LimitedThreadBackgroundTask;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -31,7 +31,7 @@ public abstract class EzyerListHolderAdapter<HOLDER extends EzyerViewHolder, DAT
         } else {
             adapter = (EzyerDataViewAutoBinder<HOLDER, DATA>) convertView.getTag();
         }
-        adapter.bindData("", RefreshType.Replace, getItem(position));
+        adapter.bindData(RefreshType.Replace, getItem(position));
         return convertView;
     }
 

@@ -1,4 +1,4 @@
-package com.niuan.common.ezyer.ui.util.dl;
+package com.niuan.common.ezyer.util.dl;
 
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;

@@ -22,12 +22,6 @@ public class EzyerTextViewBinder extends EzyerViewBinder<TextView, Object> {
         } else {
             view.setText(obj == null ? "" : obj.toString());
         }
-        view.setTag(TAG_TEXT_CONTENT, obj);
         return true;
-    }
-
-    @Override
-    public Object getData(TextView view) {
-        return view.getTag(TAG_TEXT_CONTENT);
     }
 }

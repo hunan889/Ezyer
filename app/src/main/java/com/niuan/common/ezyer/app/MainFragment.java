@@ -13,6 +13,7 @@ import com.niuan.common.ezyer.app.pojo.Dish;
 import com.niuan.common.ezyer.base.EzyerEntry;
 import com.niuan.common.ezyer.base.fragment.EzyerDataViewFragment;
 import com.niuan.common.ezyer.data.RefreshType;
+import com.niuan.common.ezyer.net.EzyerCacheRequest;
 import com.niuan.common.ezyer.ui.view.adapter.EzyerBaseListAdapter;
 import com.niuan.common.ezyer.ui.view.holder.EzyerPullListViewHolder;
 
@@ -36,13 +37,13 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     @Override
     public void onVisibleToUser() {
         if (!hasData()) {
-            requestData(RefreshType.Replace, new DishStructRequest());
+            requestData(RefreshType.Replace, new DishStructRequest().setExecuteType(EzyerCacheRequest.EXE_TYPE_CACHE_THEN_NET));
         }
     }
 
     @Override
-    public void requestFinish(Request<ArrayList<Dish>> request, RefreshType requestType, ArrayList<Dish> struct) {
-        super.requestFinish(request, requestType, struct);
+    public void requestFinish(Request<ArrayList<Dish>> request, RefreshType requestType, ArrayList<Dish> struct, boolean fromCache) {
+        super.requestFinish(request, requestType, struct, fromCache);
         getViewHolder().setRefreshing(false);
     }
 
@@ -66,14 +67,16 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     }
 
     @Override
-    protected ArrayList<Dish> updateCache(RefreshType refreshType, ArrayList<Dish> oldData, ArrayList<Dish> newData) {
+    protected ArrayList<Dish> mergePageCache(RefreshType refreshType, ArrayList<Dish> oldData, ArrayList<Dish> newData) {
         ArrayList<Dish> returnData = oldData;
         if (returnData == null) {
             returnData = new ArrayList<>();
         }
         switch (refreshType) {
             case Load: {
-                returnData.addAll(newData);
+                if (newData != null) {
+                    returnData.addAll(newData);
+                }
                 break;
             }
             case Replace: {
@@ -84,7 +87,7 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
                 break;
             }
             case Update: {
-                if (returnData != null) {
+                if (newData != null) {
                     returnData.addAll(0, newData);
                 }
                 break;

@@ -1,4 +1,4 @@
-package com.niuan.common.ezyer.ui.util.dl.thread;
+package com.niuan.common.ezyer.util.thread;
 
 import android.util.Log;
 

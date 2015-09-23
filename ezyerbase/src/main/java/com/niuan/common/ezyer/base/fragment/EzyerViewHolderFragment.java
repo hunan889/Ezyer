@@ -13,7 +13,7 @@ import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
  */
 public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends Fragment {
     protected T mViewHolder;
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);

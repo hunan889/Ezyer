@@ -1,4 +1,4 @@
-package com.niuan.common.ezyer.ui.util.dl.thread;
+package com.niuan.common.ezyer.util.thread;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @author carlosliu
  *
  */
-public class TaskExecutor {
+class TaskExecutor {
 	public enum Status {
 		RESUME, PAUSE,
 	}

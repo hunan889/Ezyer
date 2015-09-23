@@ -18,5 +18,4 @@ public abstract class EzyerViewBinder<VIEW extends View, DATA> {
      */
     public abstract boolean bindView(RefreshType refreshType, DATA obj, VIEW view);
 
-    public abstract DATA getData(VIEW view);
 }
