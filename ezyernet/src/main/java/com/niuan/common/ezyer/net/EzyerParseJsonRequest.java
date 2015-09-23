@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.util.Map;
 
 /**
  * Created by Carlos on 2015/9/18.
@@ -84,14 +85,28 @@ public class EzyerParseJsonRequest<T> extends EzyerJsonRequest<T> {
 
     @Override
     protected T readResponse(NetworkResponse response) throws VolleyError {
+        return readResponse(response.data, response.headers);
+    }
+
+    protected T readResponse(byte[] data, Map<String, String> headers) throws VolleyError {
         try {
-            String jsonString = new String(response.data,
-                    HttpHeaderParser.parseCharset(response.headers, PROTOCOL_CHARSET));
+            String jsonString = new String(data,
+                    HttpHeaderParser.parseCharset(headers, PROTOCOL_CHARSET));
             return JsonParser.parseJson(jsonString, mParseType);
         } catch (UnsupportedEncodingException e) {
             throw new ParseError(e);
         } catch (JsonSyntaxException je) {
             throw new ParseError(je);
         }
+    }
+
+    protected byte[] getBytes(T object) {
+        String json = JsonParser.toJson(object, mParseType);
+        try {
+            return json.getBytes(PROTOCOL_CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

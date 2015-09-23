@@ -73,6 +73,9 @@ public abstract class EzyerCacheRequest<T> extends EzyerRequest<T> {
     private long checkTtl(long now, long userTtl, long serverTtl) {
         long ttl = serverTtl;
         if (userTtl == TTL_FROM_HTTP_HEADER) {
+            if (serverTtl == 0) {
+                serverTtl = now;
+            }
             ttl = serverTtl;
         } else if (userTtl == TTL_EXPIRED_NEVER) {
             ttl = getNeverExpiredTtl(now);
@@ -122,14 +125,17 @@ public abstract class EzyerCacheRequest<T> extends EzyerRequest<T> {
      * Adds current request to Request Queue using {@link EzyerVolleyManager#add(Request)}<br/>
      */
     public void execute() {
+        Cache.Entry entry = null;
         if (mExeType != EXE_TYPE_AS_CONFIG) {
-            Cache.Entry entry = getRealCacheEntry();
+            entry = getRealCacheEntry();
             if (entry != null) {
                 configEntry(entry, mExeType);
-                setRealCacheEntry(entry);
             }
         }
         super.execute();
+        if (entry != null) {
+            setRealCacheEntry(entry);
+        }
     }
 
     private void configEntry(Cache.Entry entry, int exeType) {

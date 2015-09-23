@@ -79,10 +79,23 @@ public abstract class EzyerRequest<T> extends Request<T> {
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
-            return Response.success(readResponse(response), readCacheEntry(response));
+            T obj = readResponse(response);
+            Cache.Entry entry = readCacheEntry(response);
+
+            if (!(mCacheBeforeExecuted.ttl == entry.ttl
+                    && mCacheBeforeExecuted.softTtl == entry.softTtl)) {
+                mergeCache(obj, entry, mCacheBeforeExecuted);
+            }
+
+
+            return Response.success(obj, entry);
         } catch (VolleyError error) {
             return Response.error(error);
         }
+    }
+
+    protected Cache.Entry mergeCache(T newData, Cache.Entry newCache, Cache.Entry oldCache) {
+        return newCache;
     }
 
     protected abstract T readResponse(NetworkResponse response) throws VolleyError;

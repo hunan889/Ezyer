@@ -13,4 +13,8 @@ public class JsonParser {
     public static <T> T parseJson(String json, Type cls) {
         return sGson.fromJson(json, cls);
     }
+
+    public static String toJson(Object object, Type cls) {
+        return sGson.toJson(object, cls);
+    }
 }
