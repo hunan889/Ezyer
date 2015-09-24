@@ -82,9 +82,11 @@ public abstract class EzyerRequest<T> extends Request<T> {
             T obj = readResponse(response);
             Cache.Entry entry = readCacheEntry(response);
 
-            if (!(mCacheBeforeExecuted.ttl == entry.ttl
-                    && mCacheBeforeExecuted.softTtl == entry.softTtl)) {
-                mergeCache(obj, entry, mCacheBeforeExecuted);
+            if (mCacheBeforeExecuted != null) {
+                if (!(mCacheBeforeExecuted.ttl == entry.ttl
+                        && mCacheBeforeExecuted.softTtl == entry.softTtl)) {
+                    mergeCache(obj, entry, mCacheBeforeExecuted);
+                }
             }
 
 
