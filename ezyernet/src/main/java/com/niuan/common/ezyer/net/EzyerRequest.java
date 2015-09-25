@@ -40,7 +40,7 @@ public abstract class EzyerRequest<T> extends Request<T> {
     public void deliverError(VolleyError error) {
         super.deliverError(error);
         if (mResponseListener != null) {
-            mResponseListener.onError(error);
+            mResponseListener.onError(this, error);
         }
     }
 

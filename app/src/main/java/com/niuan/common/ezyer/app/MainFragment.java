@@ -42,14 +42,14 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     }
 
     @Override
-    public void requestFinish(Request<ArrayList<Dish>> request, RefreshType requestType, ArrayList<Dish> struct, boolean fromCache) {
-        super.requestFinish(request, requestType, struct, fromCache);
+    public void onRequestSuccess(Request<ArrayList<Dish>> request, RefreshType requestType, ArrayList<Dish> struct, boolean fromCache) {
+        super.onRequestSuccess(request, requestType, struct, fromCache);
         getViewHolder().setRefreshing(false);
     }
 
     @Override
-    public void requestError(VolleyError error) {
-        super.requestError(error);
+    public void onRequestError(VolleyError error) {
+        super.onRequestError(error);
         getViewHolder().setRefreshing(false);
     }
 
@@ -67,7 +67,7 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     }
 
     @Override
-    protected ArrayList<Dish> mergePageCache(RefreshType refreshType, ArrayList<Dish> oldData, ArrayList<Dish> newData) {
+    protected ArrayList<Dish> mergeWithOldData(RefreshType refreshType, ArrayList<Dish> oldData, ArrayList<Dish> newData) {
         ArrayList<Dish> returnData = oldData;
         if (returnData == null) {
             returnData = new ArrayList<>();

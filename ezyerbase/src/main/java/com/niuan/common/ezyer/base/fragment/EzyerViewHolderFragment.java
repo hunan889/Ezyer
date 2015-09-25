@@ -11,9 +11,9 @@ import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 /**
  * Created by Carlos on 2015/9/14.
  */
-public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends Fragment {
+public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends EzyerBaseFragment {
     protected T mViewHolder;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -41,54 +41,4 @@ public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends
         return mViewHolder.findViewById(id);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (isVisibleToUser()) {
-            onVisibleToUser();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (!isVisibleToUser()) {
-            onInVisibleToUser();
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser()) {
-            onVisibleToUser();
-        } else {
-            onInVisibleToUser();
-        }
-    }
-
-    private boolean isVisibleToUser() {
-        return getUserVisibleHint() && isResumed();
-    }
-
-    /**
-     * Indicates fragment is becoming visible to user, in this case, below conditions are true:
-     * 1. {@link #getUserVisibleHint()}
-     * 2. {@link #isResumed()}
-     * <p/>
-     * Called in {@link #onResume()} or {@link #setUserVisibleHint(boolean)}
-     */
-    public void onVisibleToUser() {
-    }
-
-    /**
-     * Indicates fragment is becoming invisible to user, in this case, below conditions are false:
-     * 1. {@link #getUserVisibleHint()}
-     * 2. {@link #isResumed()}
-     * <p/>
-     * Called in {@link #onPause()} or {@link #setUserVisibleHint(boolean)}
-     */
-    public void onInVisibleToUser() {
-
-    }
 }

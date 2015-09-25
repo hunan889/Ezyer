@@ -9,7 +9,7 @@ import com.android.volley.VolleyError;
 public abstract class ResponseListener<T> {
     public abstract void onResponse(Request<T> request, T response, boolean fromCache);
 
-    public void onError(VolleyError error) {
+    public void onError(Request<T> request, VolleyError error) {
         
     }
 }
