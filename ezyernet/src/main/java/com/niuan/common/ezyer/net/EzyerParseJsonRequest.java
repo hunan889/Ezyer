@@ -92,7 +92,7 @@ public class EzyerParseJsonRequest<T> extends EzyerJsonRequest<T> {
         try {
             String jsonString = new String(data,
                     HttpHeaderParser.parseCharset(headers, PROTOCOL_CHARSET));
-            return JsonParser.parseJson(jsonString, mParseType);
+            return EzyerJsonParser.parseJson(jsonString, mParseType);
         } catch (UnsupportedEncodingException e) {
             throw new ParseError(e);
         } catch (JsonSyntaxException je) {
@@ -101,7 +101,7 @@ public class EzyerParseJsonRequest<T> extends EzyerJsonRequest<T> {
     }
 
     protected byte[] getBytes(T object) {
-        String json = JsonParser.toJson(object, mParseType);
+        String json = EzyerJsonParser.toJson(object, mParseType);
         try {
             return json.getBytes(PROTOCOL_CHARSET);
         } catch (UnsupportedEncodingException e) {

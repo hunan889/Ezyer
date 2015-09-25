@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 /**
  * Created by Carlos on 2015/9/18.
  */
-public class JsonParser {
+public class EzyerJsonParser {
     private static Gson sGson = new Gson();
 
     public static <T> T parseJson(String json, Type cls) {

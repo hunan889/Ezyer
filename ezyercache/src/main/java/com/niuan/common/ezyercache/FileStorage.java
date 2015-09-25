@@ -1,282 +1,283 @@
 package com.niuan.common.ezyercache;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.niuan.common.ezyer.util.LogUtils;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import com.yy.android.gamenews.util.Util;
 
 public abstract class FileStorage {
 
-	private final String LOG_TAG = FileStorage.class.getName();
+    private final String LOG_TAG = FileStorage.class.getName();
 
-	public abstract String getRootPath();
-	private BitmapFactory.Options opt;
+    public abstract String getRootPath();
 
-	private boolean creatBasePath(String path) {
+    private BitmapFactory.Options opt;
 
-		File file = new File(path);
+    private boolean creatBasePath(String path) {
 
-		if (file.exists())
-			return true;
+        File file = new File(path);
 
-		try {
-			boolean isOK = file.mkdir();
-			return isOK;
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, Util.getStackTraceString(ex));
-			return false;
-		}
-	}
+        if (file.exists())
+            return true;
 
-	public String createPath(String path) {
-		String basePath = getTempPath();
+        try {
+            boolean isOK = file.mkdir();
+            return isOK;
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, LogUtils.getStackTraceString(ex));
+            return false;
+        }
+    }
 
-		if (basePath == null)
-			return null;
+    public String createPath(String path) {
+        String basePath = getTempPath();
 
-		return creatBasePath(basePath + path) ? basePath + path : null;
-	}
+        if (basePath == null)
+            return null;
 
-	public String getTempPath() {
-		return getRootPath();
-	}
+        return creatBasePath(basePath + path) ? basePath + path : null;
+    }
 
-	public boolean fileExsits(String fileName) {
-		String path = getTempPath();
+    public String getTempPath() {
+        return getRootPath();
+    }
 
-		if (path == null) {
-			return false;
-		}
+    public boolean fileExsits(String fileName) {
+        String path = getTempPath();
 
-		File file = new File(path + fileName);
+        if (path == null) {
+            return false;
+        }
 
-		return file.exists();
+        File file = new File(path + fileName);
 
-	}
+        return file.exists();
 
-	public File getFile(String fileName) {
+    }
 
-		fileName = !fileName.equals("") && fileName.startsWith(File.separator) ? fileName.substring(1) : fileName;
-		
-		String path = getTempPath();
+    public File getFile(String fileName) {
 
-		if (path == null) {
-			return null;
-		}
-		File file = new File(path + fileName);
+        fileName = !fileName.equals("") && fileName.startsWith(File.separator) ? fileName.substring(1) : fileName;
 
-		if (file.exists()) {
-			return file;
-		} else {
-			return null;
-		}
-	}
+        String path = getTempPath();
 
-	public File createFile(String filename) {
-		String path = getTempPath();
+        if (path == null) {
+            return null;
+        }
+        File file = new File(path + fileName);
 
-		if (path == null) {
-			return null;
-		}
+        if (file.exists()) {
+            return file;
+        } else {
+            return null;
+        }
+    }
 
-		File file = new File(path + filename);
-		try {
-			if (file.exists()) {
-				file.delete();
-			}
-			if (file.createNewFile() == true) {
-				return file;
-			} else {
-				return null;
-			}
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, "createFile" + ex);
-			return null;
-		}
-	}
+    public File createFile(String filename) {
+        String path = getTempPath();
 
-	public File CreateFileIfNotFound(String fileName) {
-		String path = getTempPath();
+        if (path == null) {
+            return null;
+        }
 
-		if (path == null) {
-			return null;
-		}
+        File file = new File(path + filename);
+        try {
+            if (file.exists()) {
+                file.delete();
+            }
+            if (file.createNewFile() == true) {
+                return file;
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, "createFile" + ex);
+            return null;
+        }
+    }
 
-		File file = getFile(fileName);
+    public File CreateFileIfNotFound(String fileName) {
+        String path = getTempPath();
 
-		if (null != file)
-			return file;
+        if (path == null) {
+            return null;
+        }
 
-		return createFile(fileName);
+        File file = getFile(fileName);
 
-	}
+        if (null != file)
+            return file;
 
-	public Bitmap getImage(String fileName) {
+        return createFile(fileName);
 
-		String path = getTempPath();
+    }
 
-		if (path == null) {
-			return null;
-		}
+    public Bitmap getImage(String fileName) {
 
-		File file = getFile(fileName);
+        String path = getTempPath();
 
-		if (null == file)
-			return null;
-		
-		
-		Bitmap pBitmap = null;
-		if(null == opt)
-		{
-			opt = new BitmapFactory.Options();
-			opt.inPreferredConfig = Bitmap.Config.RGB_565;
-			opt.inPurgeable = true;  
-			opt.inInputShareable = true;
-		}
-		try {
-			pBitmap = BitmapFactory.decodeFile(path + fileName,opt);
-		} catch( OutOfMemoryError aError ) {
-			aError.printStackTrace();
-			System.gc();
-			pBitmap = null;
-		}
+        if (path == null) {
+            return null;
+        }
 
-		return pBitmap;
-	}
+        File file = getFile(fileName);
 
-	public String saveImage(String fileName, Bitmap bm) {
-		File file = createFile(fileName);
+        if (null == file)
+            return null;
 
-		if (null == file)
-			return null;
-		FileOutputStream output = null;
-		try {
-			output = new FileOutputStream(file);
-			bm.compress(Bitmap.CompressFormat.PNG, 100, output);
-			output.flush();
 
-			return file.getPath();
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, "SaveFile|" + ex);
-			return null;
-		}finally{
-			try {
-				if(output != null)
-					output.close();
-			} catch (IOException e) {
-				Log.d(LOG_TAG, Util.getStackTraceString(e));
-			}
-		}
-	}
+        Bitmap pBitmap = null;
+        if (null == opt) {
+            opt = new BitmapFactory.Options();
+            opt.inPreferredConfig = Bitmap.Config.RGB_565;
+            opt.inPurgeable = true;
+            opt.inInputShareable = true;
+        }
+        try {
+            pBitmap = BitmapFactory.decodeFile(path + fileName, opt);
+        } catch (OutOfMemoryError aError) {
+            aError.printStackTrace();
+            System.gc();
+            pBitmap = null;
+        }
 
-	public String SaveFile(String fileName, byte[] data) {
+        return pBitmap;
+    }
 
-		File file = createFile(fileName);
+    public String saveImage(String fileName, Bitmap bm) {
+        File file = createFile(fileName);
 
-		if (null == file)
-			return null;
-		FileOutputStream output = null;
-		try {
-			output = new FileOutputStream(file);
-			output.write(data, 0, data.length);
-			output.flush();
-			return file.getPath();
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, "SaveFile" + ex);
-			return null;
-		}finally{
-			try {
-				if(output != null)
-					output.close();
-			} catch (IOException e) {
-				Log.d(LOG_TAG, Util.getStackTraceString(e));
-			}
-		}
-	}
+        if (null == file)
+            return null;
+        FileOutputStream output = null;
+        try {
+            output = new FileOutputStream(file);
+            bm.compress(Bitmap.CompressFormat.PNG, 100, output);
+            output.flush();
 
-	public InputStream getInputStream(String filename) {
-		File file = createFile(filename);
-		if (null == file)
-			return null;
+            return file.getPath();
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, "SaveFile|" + ex);
+            return null;
+        } finally {
+            try {
+                if (output != null)
+                    output.close();
+            } catch (IOException e) {
+                Log.d(LOG_TAG, LogUtils.getStackTraceString(e));
+            }
+        }
+    }
 
-		try {
-			return new FileInputStream(file);
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, "GetStreamFromFile" + ex);
-			return null;
-		}
-	}
+    public String SaveFile(String fileName, byte[] data) {
 
-	public InputStream getOutputStream(String filename) {
-		File file = createFile(filename);
-		if (null == file)
-			return null;
+        File file = createFile(fileName);
 
-		try {
-			return new FileInputStream(file);
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, "GetStreamFromFile" + ex);
-			return null;
-		}
-	}
+        if (null == file)
+            return null;
+        FileOutputStream output = null;
+        try {
+            output = new FileOutputStream(file);
+            output.write(data, 0, data.length);
+            output.flush();
+            return file.getPath();
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, "SaveFile" + ex);
+            return null;
+        } finally {
+            try {
+                if (output != null)
+                    output.close();
+            } catch (IOException e) {
+                Log.d(LOG_TAG, LogUtils.getStackTraceString(e));
+            }
+        }
+    }
 
-	public boolean removeFile(String fileName) {
+    public InputStream getInputStream(String filename) {
+        File file = createFile(filename);
+        if (null == file)
+            return null;
 
-		File file = getFile(fileName);
+        try {
+            return new FileInputStream(file);
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, "GetStreamFromFile" + ex);
+            return null;
+        }
+    }
 
-		if (null != file) {
-			try {
-				return file.delete();
-			} catch (Exception ex) {
-				Log.d(LOG_TAG, Util.getStackTraceString(ex));
-				return false;
-			}
-		}
+    public InputStream getOutputStream(String filename) {
+        File file = createFile(filename);
+        if (null == file)
+            return null;
 
-		return true;
-	}
+        try {
+            return new FileInputStream(file);
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, "GetStreamFromFile" + ex);
+            return null;
+        }
+    }
 
-	public void removeFolder(String folderPath) {
-		try {
-			delAllFile(folderPath);
-			removeFile(folderPath);
-		} catch (Exception ex) {
-			Log.d(LOG_TAG, ex + "");
-		}
-	}
+    public boolean removeFile(String fileName) {
 
-	public void delAllFile(String path) {
-		File file = getFile(path);
-		if (file == null)
-			return;
-		if (!file.exists()) {
-			return;
-		}
-		if (!file.isDirectory()) {
-			return;
-		}
-		String[] tempList = file.list();
-		File temp = null;
-		for (int i = 0; i < tempList.length; i++) {
-			if (path.endsWith(File.separator)) {
-				temp = getFile(path + tempList[i]);
-			} else {
-				temp = getFile(path + File.separator + tempList[i]);
-			}
-			if (temp.isFile()) {
-				temp.delete();
-			}
-			if (temp.isDirectory()) {
-				delAllFile(path + "/" + tempList[i]);//先删除文件夹里面的文�?
-				removeFolder(path + "/" + tempList[i]);//再删除空文件�?
-			}
-		}
-	}
+        File file = getFile(fileName);
+
+        if (null != file) {
+            try {
+                return file.delete();
+            } catch (Exception ex) {
+                Log.d(LOG_TAG, LogUtils.getStackTraceString(ex));
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void removeFolder(String folderPath) {
+        try {
+            delAllFile(folderPath);
+            removeFile(folderPath);
+        } catch (Exception ex) {
+            Log.d(LOG_TAG, ex + "");
+        }
+    }
+
+    public void delAllFile(String path) {
+        File file = getFile(path);
+        if (file == null)
+            return;
+        if (!file.exists()) {
+            return;
+        }
+        if (!file.isDirectory()) {
+            return;
+        }
+        String[] tempList = file.list();
+        File temp = null;
+        for (int i = 0; i < tempList.length; i++) {
+            if (path.endsWith(File.separator)) {
+                temp = getFile(path + tempList[i]);
+            } else {
+                temp = getFile(path + File.separator + tempList[i]);
+            }
+            if (temp.isFile()) {
+                temp.delete();
+            }
+            if (temp.isDirectory()) {
+                delAllFile(path + "/" + tempList[i]);//先删除文件夹里面的文件
+                removeFolder(path + "/" + tempList[i]);//再删除空文件夹
+            }
+        }
+    }
 }
