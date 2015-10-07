@@ -1,11 +1,11 @@
-package com.niuan.common.ezyercache;
+package com.niuan.common.ezyer.cache;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.util.Base64;
 
-import com.niuan.common.ezyercache.db.Database;
-import com.niuan.common.ezyercache.db.DbFactory;
+import com.niuan.common.ezyer.cache.db.Database;
+import com.niuan.common.ezyer.cache.db.DbFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -40,14 +40,14 @@ public class EzyerPageCache {
     }
 //
 //	public boolean setJceObject(String key, Object object, long cacheTime) {
-//		JceOutputStream os = new JceOutputStream();
+//		JceOutputStream os = v2 JceOutputStream();
 //
 //		try {
 //			os.write(object, 0);
 //		} catch (Exception e) {
 //			e.printStackTrace();
 //		}
-//		String str = new String(Base64.encode(os.toByteArray(), Base64.DEFAULT));
+//		String str = v2 String(Base64.encode(os.toByteArray(), Base64.DEFAULT));
 //
 //		return set(key, str, cacheTime);
 //	}
@@ -60,7 +60,7 @@ public class EzyerPageCache {
 //			return null;
 //		}
 //		byte[] data = Base64.decode(str.getBytes(), Base64.DEFAULT);
-//		JceInputStream is = new JceInputStream(data);
+//		JceInputStream is = v2 JceInputStream(data);
 //		T returnValue = null;
 //
 //		try {

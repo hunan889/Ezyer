@@ -1,4 +1,4 @@
-package com.niuan.common.ezyercache;
+package com.niuan.common.ezyer.cache;
 
 import android.os.Environment;
 import android.util.Log;

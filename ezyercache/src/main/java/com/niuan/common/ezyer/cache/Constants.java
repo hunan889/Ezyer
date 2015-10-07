@@ -1,4 +1,4 @@
-package com.niuan.common.ezyercache;
+package com.niuan.common.ezyer.cache;
 
 /**
  * Created by Carlos on 2015/9/24.

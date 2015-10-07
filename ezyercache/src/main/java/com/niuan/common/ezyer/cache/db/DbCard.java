@@ -1,11 +1,11 @@
-package com.niuan.common.ezyercache.db;
+package com.niuan.common.ezyer.cache.db;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.niuan.common.ezyer.util.LogUtils;
-import com.niuan.common.ezyercache.Constants;
-import com.niuan.common.ezyercache.SDCache;
+import com.niuan.common.ezyer.cache.Constants;
+import com.niuan.common.ezyer.cache.SDCache;
 
 import java.util.Date;
 

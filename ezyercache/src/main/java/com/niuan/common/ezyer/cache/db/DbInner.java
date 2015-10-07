@@ -1,4 +1,4 @@
-package com.niuan.common.ezyercache.db;
+package com.niuan.common.ezyer.cache.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,10 +7,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.niuan.common.ezyer.util.LogUtils;
-import com.niuan.common.ezyercache.Constants;
+import com.niuan.common.ezyer.cache.Constants;
 
 public class DbInner extends Database {
 
+    public static final String SQL_PAGE_CACHE = "create table if not exists t_page_cache(id varchar(50) primary key, content TEXT, row_create_time INTEGER, row_expire_time INTEGER)";
+    public static final String SQL_LOGIN = "create table if not exists t_login(uin INTEGER primary key, " +
+            "nick_name varchar(30), row_create_time INTEGER)";
     private Context mContext;
 
     public DbInner(Context context) {
@@ -40,18 +43,16 @@ public class DbInner extends Database {
         public void onCreate(SQLiteDatabase db) {
 
             try {
-                db.execSQL("create table if not exists t_page_cache(id varchar(50) primary key, content TEXT, row_create_time INTEGER, row_expire_time INTEGER)");
+                db.execSQL(SQL_PAGE_CACHE);
             } catch (Exception ex) {
                 Log.e(LOG_TAG, "onCreate|page_cache|" + LogUtils.getStackTraceString(ex));
                 ;
             }
 
             try {
-                db.execSQL("create table if not exists t_login(uin INTEGER primary key, " +
-                        "nick_name varchar(30), row_create_time INTEGER)");
+                db.execSQL(SQL_LOGIN);
             } catch (Exception ex) {
                 Log.e(LOG_TAG, "onCreate|t_login|" + LogUtils.getStackTraceString(ex));
-                ;
             }
 
         }

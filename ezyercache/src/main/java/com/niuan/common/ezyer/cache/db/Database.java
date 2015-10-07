@@ -1,4 +1,4 @@
-package com.niuan.common.ezyercache.db;
+package com.niuan.common.ezyer.cache.db;
 
 import android.content.ContentValues;
 import android.database.Cursor;

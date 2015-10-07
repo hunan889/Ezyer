@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.BaseAdapter;
 
-import com.niuan.common.ezyer.ui.util.CollectionUtil;
+
+import com.niuan.common.ezyer.util.CollectionUtil;
 
 import java.util.ArrayList;
 import java.util.List;
