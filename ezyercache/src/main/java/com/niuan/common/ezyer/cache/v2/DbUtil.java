@@ -2,17 +2,15 @@ package com.niuan.common.ezyer.cache.v2;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.niuan.common.ezyer.cache.Constants;
-import com.niuan.common.ezyer.cache.db.Database;
 import com.niuan.common.ezyer.util.CollectionUtil;
 import com.niuan.common.ezyer.util.LogUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Carlos Liu on 2015/10/7.
@@ -62,11 +60,13 @@ public class DbUtil {
 
     public static class DbTableDescriptor {
         private String mName;
-        private Map<String, String> mRowMap;
+        private Map<String, String> mColumnMap;
+        private Map<String, List<String>> mIndexMap;
 
-        public DbTableDescriptor(String name, Map<String, String> rowMap) {
+        public DbTableDescriptor(String name, Map<String, String> columnMap, Map<String, List<String>> sqlIndexMap) {
             mName = name;
-            mRowMap = rowMap;
+            mColumnMap = columnMap;
+            mIndexMap = sqlIndexMap;
         }
 
         public String getName() {
@@ -77,12 +77,20 @@ public class DbUtil {
             mName = name;
         }
 
-        public Map<String, String> getRowMap() {
-            return mRowMap;
+        public Map<String, String> getColumnMap() {
+            return mColumnMap;
         }
 
-        public void setRowMap(Map<String, String> rowMap) {
-            mRowMap = rowMap;
+        public void setColumnMap(Map<String, String> columnMap) {
+            mColumnMap = columnMap;
+        }
+
+        public Map<String, List<String>> getIndexMap() {
+            return mIndexMap;
+        }
+
+        public void setIndexMap(Map<String, List<String>> indexMap) {
+            mIndexMap = indexMap;
         }
     }
 
@@ -97,19 +105,33 @@ public class DbUtil {
             mDescriptor = descriptor;
         }
 
-        private String getCreateSql(String tableName, Map<String, String> elementMap) {
+        private String getCreateSql(String tableName, Map<String, String> columnMap) {
             StringBuilder sqlBuilder = new StringBuilder("create table if not exists ");
             sqlBuilder.append(tableName);
-            sqlBuilder.append("(");
 
-            if (!CollectionUtil.isEmpty(elementMap)) {
-                for (String name : elementMap.keySet()) {
-                    String attr = elementMap.get(name);
+            if (!CollectionUtil.isEmpty(columnMap)) {
+                sqlBuilder.append("(");
+                Set<String> keys = columnMap.keySet();
+                for (String name : keys) {
+                    String attr = columnMap.get(name);
                     sqlBuilder.append(name).append(" ").append(attr).append(",");
                 }
-
                 sqlBuilder.deleteCharAt(sqlBuilder.length() - 1);
+                sqlBuilder.append(");");
             }
+            return sqlBuilder.toString();
+        }
+
+        private String getIndexSql(String tableName, String indexName, List<String> columnList) {
+            StringBuilder sqlBuilder = new StringBuilder("create index ");
+            sqlBuilder.append(indexName).append(" on ")
+                    .append(tableName)
+                    .append("(");
+
+            for (int i = 0; i < columnList.size(); i++) {
+                sqlBuilder.append(i == 0 ? "" : ",").append(columnList.get(i));
+            }
+            sqlBuilder.append(");");
             return sqlBuilder.toString();
         }
 
@@ -118,9 +140,20 @@ public class DbUtil {
 
             List<DbTableDescriptor> tableDescriptors = mDescriptor.getTableDescriptors();
             for (DbTableDescriptor tableDescriptor : tableDescriptors) {
-                String sql = getCreateSql(tableDescriptor.getName(), tableDescriptor.getRowMap());
+                String tableName = tableDescriptor.getName();
+                String createSql = getCreateSql(tableName, tableDescriptor.getColumnMap());
                 try {
-                    db.execSQL(sql);
+                    db.execSQL(createSql);
+
+                    Map<String, List<String>> indexMap = tableDescriptor.getIndexMap();
+                    if (indexMap != null) {
+                        for (String indexName : indexMap.keySet()) {
+                            List<String> indexColumnList = indexMap.get(indexName);
+                            String indexSql = getIndexSql(tableName, indexName, indexColumnList);
+                            db.execSQL(indexSql);
+                        }
+                    }
+
                 } catch (Exception ex) {
                     Log.e(LOG_TAG, "onCreate|page_cache|" + LogUtils.getStackTraceString(ex));
                 }

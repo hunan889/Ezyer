@@ -58,12 +58,18 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder, DATA
         }
 
         if (mCurrentPageDataCache.isEmpty()) {
-            mCurrentPageDataCache = loadDataFromCache();
+
+            HashMap<String, DATA> data = loadDataFromCache();
+            if (data != null) {
+                mCurrentPageDataCache.putAll(data);
+            }
         }
 
-        for (String key : mCurrentPageDataCache.keySet()) {
-            DATA value = mCurrentPageDataCache.get(key);
-            bindData(null, RefreshType.Replace, value);
+        if (!mCurrentPageDataCache.isEmpty()) {
+            for (String key : mCurrentPageDataCache.keySet()) {
+                DATA value = mCurrentPageDataCache.get(key);
+                bindData(null, RefreshType.Replace, value);
+            }
         }
     }
 

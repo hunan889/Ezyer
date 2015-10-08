@@ -1,17 +1,42 @@
 package com.niuan.common.ezyer.cache.v2;
 
+import java.util.List;
+
 /**
  * Created by Carlos Liu on 2015/10/7.
  */
 public interface EzyerCache {
+    class PersistentObject {
+        public final byte[] mData;
+        public final String mKey;
+        public final long mExpireTimeMillis;
 
-    byte[] get(String key);
+        public PersistentObject(byte[] data, String key, long expireTimeMillis) {
+            mData = data;
+            mKey = key;
+            mExpireTimeMillis = expireTimeMillis;
+        }
+    }
 
-    byte[] get(String key, int start, int end);
+    class ValueObject {
+        public final byte[] mData;
+        public final String mKey;
+        public final boolean mIsExpired;
 
-    void set(String key, byte[] object, long expireTimeMillis);
+        public ValueObject(byte[] data, String key, boolean isExpired) {
+            mData = data;
+            mKey = key;
+            mIsExpired = isExpired;
+        }
+    }
 
-    void add(String key, byte[] object, long expireTimeMillis);
+    ValueObject get(String key);
+
+    List<ValueObject> get(String key, int start, int end);
+
+    void set(PersistentObject po);
+
+    void add(PersistentObject po);
 
     void remove(String key);
 
