@@ -1,11 +1,11 @@
 package com.niuan.common.ezyer.base.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.niuan.common.ezyer.ui.view.adapter.EzyerDataViewIdPair;
 import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
 /**
@@ -13,6 +13,7 @@ import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
  */
 public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends EzyerBaseFragment {
     protected T mViewHolder;
+    protected EzyerDataViewIdPair mDataViewIdPair;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -23,6 +24,7 @@ public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewHolder = initRootViewHolder();
+        mDataViewIdPair = initDataViewIdPair();
     }
 
     protected abstract T initRootViewHolder();
@@ -31,6 +33,15 @@ public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends
         return mViewHolder;
     }
 
+    protected EzyerDataViewIdPair initDataViewIdPair() {
+        return null;
+    }
+
+    protected EzyerDataViewIdPair getDataViewIdPair() {
+        return mDataViewIdPair;
+    }
+
+
     public <V extends View> V findViewById(int id) {
         if (mViewHolder == null) {
             mViewHolder = initRootViewHolder();
@@ -38,7 +49,7 @@ public abstract class EzyerViewHolderFragment<T extends EzyerViewHolder> extends
         if (mViewHolder == null) {
             return null;
         }
-        return mViewHolder.findViewById(id);
+        return getViewHolder().findViewById(id);
     }
 
 }

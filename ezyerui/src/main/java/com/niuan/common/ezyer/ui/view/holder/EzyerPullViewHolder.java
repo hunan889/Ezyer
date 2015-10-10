@@ -1,10 +1,7 @@
 package com.niuan.common.ezyer.ui.view.holder;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
@@ -14,15 +11,16 @@ import com.yalantis.phoenix.PullToRefreshView;
 public class EzyerPullViewHolder extends EzyerViewHolder implements PullToRefreshView.OnRefreshListener {
     private PullToRefreshView mPullToRefreshView;
 
-    public EzyerPullViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
-        super(inflater, parent, attachToParent);
-        init();
-    }
+//    public EzyerPullViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
+//        super(inflater, parent, attachToParent);
+//        init();
+//    }
 
     public EzyerPullViewHolder(View view) {
         super(view);
         init();
     }
+
     private void init() {
         mPullToRefreshView = findViewById(initPullViewId());
 
@@ -54,4 +52,6 @@ public class EzyerPullViewHolder extends EzyerViewHolder implements PullToRefres
     public void onRefresh() {
 
     }
+
+
 }

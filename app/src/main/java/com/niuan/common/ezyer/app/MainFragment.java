@@ -57,6 +57,7 @@ public class MainFragment extends EzyerDataViewFragment<MainFragmentViewHolder, 
     protected MainFragmentViewHolder initRootViewHolder() {
         MainFragmentViewHolder holder = new MainFragmentViewHolder(getView());
         holder.setPullListViewListener(this);
+
         return holder;
     }
 

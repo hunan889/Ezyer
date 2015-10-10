@@ -2,11 +2,11 @@ package com.niuan.common.ezyer.ui.view.adapter;
 
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.View;
 
 import com.niuan.common.ezyer.data.RefreshType;
 import com.niuan.common.ezyer.ui.annotation.EzyerData;
-import com.niuan.common.ezyer.ui.annotation.EzyerDataType;
 import com.niuan.common.ezyer.ui.reflection.EzyerClass;
 import com.niuan.common.ezyer.ui.reflection.EzyerClassCache;
 import com.niuan.common.ezyer.ui.reflection.EzyerField;
@@ -15,7 +15,6 @@ import com.niuan.common.ezyer.ui.view.binder.EzyerViewBinderManager;
 import com.niuan.common.ezyer.ui.view.holder.EzyerViewHolder;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * Created by Carlos on 2015/8/14.
@@ -25,6 +24,8 @@ public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
     private DATA mData;
     private HOLDER mHolder;
     private SparseArray mDataValueMap = new SparseArray();
+
+    private SparseIntArray mDataViewIdMap = new SparseIntArray();
 
     public EzyerDataViewAutoBinder() {
 
@@ -38,14 +39,14 @@ public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
         return mHolder;
     }
 
-    public final void bindData(RefreshType type, DATA data) {
+    public final void bindData(RefreshType type, DATA data, EzyerDataViewIdPair dataViewPair) {
         mData = data;
 
-        bindView(type, mHolder, data);
+        bindView(type, mHolder, data, dataViewPair);
     }
 
-    public void bindView(RefreshType refreshType, HOLDER holder, DATA data) {
-        bindHolder(refreshType, holder, data);
+    public void bindView(RefreshType refreshType, HOLDER holder, DATA data, EzyerDataViewIdPair dataViewPair) {
+        bindHolder(refreshType, holder, data, dataViewPair);
     }
 
     public final void bindView(RefreshType refreshType, View view, Object object) {
@@ -65,8 +66,8 @@ public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
         }
     }
 
-    public final void bindHolder(RefreshType refreshType, EzyerViewHolder holder, Object data) {
-        if (holder == null || data == null) {
+    public void bindHolder(RefreshType refreshType, EzyerViewHolder holder, Object data, EzyerDataViewIdPair idPair) {
+        if (holder == null || data == null || idPair == null) {
             return;
         }
 
@@ -81,48 +82,26 @@ public class EzyerDataViewAutoBinder<HOLDER extends EzyerViewHolder, DATA> {
             Field field = ezyerField.getField();
             field.setAccessible(true);
 
-            int type = ezyerData.type();
-            switch (type) {
-                case EzyerDataType.TYPE_DIRECT_VALUE: {
-                    int id = ezyerData.id();
-                    List<View> viewList = holder.findViewsByDataId(id);
-                    if (viewList == null) {
-                        continue;
-                    }
 
-                    for (View view : viewList) {
-                        Object fieldValue = null;
-                        try {
-                            fieldValue = field.get(data);
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+            int dataId = ezyerData.id();
 
-                        if (fieldValue != null) {
-                            bindView(refreshType, view, fieldValue);
-                            mDataValueMap.put(view.hashCode(), fieldValue);
-                        }
-                    }
-
-                    break;
+            int[] viewIds = idPair.findViewIdsByDataId(dataId);
+            for (int viewId : viewIds) {
+                Object fieldValue = null;
+                try {
+                    fieldValue = field.get(data);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
                 }
-                case EzyerDataType.TYPE_WRAPPER: {
-                    Object fieldValue = null;
-                    try {
-                        fieldValue = field.get(data);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
 
-                    if (fieldValue != null) {
-                        int id = ezyerData.id();
-                        EzyerViewHolder childHolder = holder.findHolderByDataId(id);
-                        if (childHolder == null) {
-                            continue;
-                        }
-                        bindHolder(refreshType, childHolder, fieldValue);
-                    }
-                    break;
+                EzyerViewHolder childHolder = holder.findHolderById(viewId);
+                if (childHolder != null) {
+                    bindHolder(refreshType, childHolder, fieldValue, idPair);
+                } else {
+
+                    View view = holder.findViewById(viewId);
+                    bindView(refreshType, view, fieldValue);
+                    mDataValueMap.put(view.hashCode(), fieldValue);
                 }
             }
         }

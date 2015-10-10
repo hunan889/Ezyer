@@ -1,10 +1,7 @@
 package com.niuan.common.ezyer.ui.view.holder;
 
-import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,10 +23,10 @@ public abstract class EzyerPullListViewHolder extends EzyerPullViewHolder implem
     public static final int DIRECTION_DOWN = 1;
     private final static int OFFSET_SCROLL = 0;
 
-    public EzyerPullListViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
-        super(inflater, parent, attachToParent);
-        init();
-    }
+//    public EzyerPullListViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
+//        super(inflater, parent, attachToParent);
+//        init();
+//    }
 
     public EzyerPullListViewHolder(View view) {
         super(view);

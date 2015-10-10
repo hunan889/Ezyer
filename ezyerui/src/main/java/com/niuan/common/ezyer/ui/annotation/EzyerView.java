@@ -9,7 +9,4 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface EzyerView {
     int resourceId() default -1;
-
-    int dataId() default -1;
-
 }

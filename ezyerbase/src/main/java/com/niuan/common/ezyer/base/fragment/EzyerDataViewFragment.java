@@ -113,8 +113,8 @@ public abstract class EzyerDataViewFragment<HOLDER extends EzyerViewHolder, DATA
         bindData(request, refreshType, getViewHolder(), data);
     }
 
-    public void bindData(Request<DATA> request, RefreshType refreshType, EzyerViewHolder holder, DATA data) {
-        mAdapter.bindHolder(refreshType, holder, data);
+    public void bindData(Request<DATA> request, RefreshType refreshType, HOLDER holder, DATA data) {
+        mAdapter.bindHolder(refreshType, holder, data, getDataViewIdPair());
     }
 
     public void bindView(Request<DATA> request, RefreshType refreshType, View view, Object data) {

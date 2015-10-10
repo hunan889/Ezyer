@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.niuan.common.ezyer.util.CollectionUtil;
+import com.niuan.common.ezyer.util.CheckUtil;
 import com.niuan.common.ezyer.util.LogUtils;
 
 import java.util.List;
@@ -109,7 +109,7 @@ public class DbUtil {
             StringBuilder sqlBuilder = new StringBuilder("create table if not exists ");
             sqlBuilder.append(tableName);
 
-            if (!CollectionUtil.isEmpty(columnMap)) {
+            if (!CheckUtil.isEmpty(columnMap)) {
                 sqlBuilder.append("(");
                 Set<String> keys = columnMap.keySet();
                 for (String name : keys) {

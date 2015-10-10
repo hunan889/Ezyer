@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.BaseAdapter;
 
 
-import com.niuan.common.ezyer.util.CollectionUtil;
+import com.niuan.common.ezyer.util.CheckUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public abstract class EzyerBaseListAdapter<E> extends BaseAdapter {
     public void setDataSource(List<E> dataSource) {
         mDataSource.clear();
 
-        if (!CollectionUtil.isEmpty(dataSource)) {
+        if (!CheckUtil.isEmpty(dataSource)) {
             mDataSource.addAll(dataSource);
             notifyDataSetChanged();
         } else {
@@ -48,7 +48,7 @@ public abstract class EzyerBaseListAdapter<E> extends BaseAdapter {
     }
 
     public void addDataSource(List<E> dataSource) {
-        if (CollectionUtil.isEmpty(dataSource)) {
+        if (CheckUtil.isEmpty(dataSource)) {
             return;
         }
 
@@ -57,7 +57,7 @@ public abstract class EzyerBaseListAdapter<E> extends BaseAdapter {
     }
 
     public void addDataSourceFront(List<E> dataSource) {
-        if (CollectionUtil.isEmpty(dataSource)) {
+        if (CheckUtil.isEmpty(dataSource)) {
             return;
         }
         mDataSource.addAll(0, dataSource);

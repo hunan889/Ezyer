@@ -12,30 +12,29 @@ import com.niuan.common.ezyer.ui.reflection.EzyerClassCache;
 import com.niuan.common.ezyer.ui.reflection.EzyerField;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Carlos on 2015/8/14.
  */
 public class EzyerViewHolder {
     private View mRootView;
-    private SparseArray<List<View>> mViewDataIdMap = new SparseArray<>();
     private SparseArray<View> mViewResIdMap = new SparseArray<>();
-    private SparseArray<EzyerViewHolder> mHolderDataIdMap = new SparseArray<>();
+    private SparseArray<EzyerViewHolder> mHolderViewIdMap = new SparseArray<>();
+//    private SparseArray<List<View>> mViewDataIdMap = new SparseArray<>();
+//    private SparseArray<EzyerViewHolder> mHolderDataIdMap = new SparseArray<>();
 
-    public EzyerViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
-        int resourceId = getEzyerViewIdForClass(getClass());
+//    public EzyerViewHolder(@NonNull LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
+//        int resourceId = getEzyerViewIdForClass(getClass());
+//
+//        if (resourceId == 0) {
+//            throw new RuntimeException("No resource id found for class " + getClass()
+//                    + ", did you forget to add EzyerView annotation in you class definition?");
+//        }
+//        View view = inflater.inflate(resourceId, parent, attachToParent);
+//
+//        init(view);
+//    }
 
-        if (resourceId == 0) {
-            throw new RuntimeException("No resource id found for class " + getClass()
-                    + ", did you forget to add EzyerView annotation in you class definition?");
-        }
-        View view = inflater.inflate(resourceId, parent, attachToParent);
-
-        init(view);
-    }
 
     public EzyerViewHolder(View view) {
         if (view == null) {
@@ -50,24 +49,28 @@ public class EzyerViewHolder {
         fillEzyerViewField(view);
     }
 
-    public final void pair(int dataId, int resId) {
-        List<View> cacheViewList = mViewDataIdMap.get(dataId);
-        if (cacheViewList == null) {
-            cacheViewList = new ArrayList<>();
-            mViewDataIdMap.put(dataId, cacheViewList);
-        }
+//    public final void pair(int dataId, int resId) {
+//        List<View> cacheViewList = mViewDataIdMap.get(dataId);
+//        if (cacheViewList == null) {
+//            cacheViewList = new ArrayList<>();
+//            mViewDataIdMap.put(dataId, cacheViewList);
+//        }
+//
+//        View view = findViewById(resId);
+//        if (view != null && !cacheViewList.contains(view)) {
+//            cacheViewList.add(view);
+//        }
+//    }
+//
+//    public final void pair(int dataId, EzyerViewHolder holder) {
+//        mHolderDataIdMap.put(dataId, holder);
+//    }
 
-        View view = findViewById(resId);
-        if (view != null && !cacheViewList.contains(view)) {
-            cacheViewList.add(view);
-        }
+    public int getId() {
+        return mRootView.getId();
     }
 
-    public final void pair(int dataId, EzyerViewHolder holder) {
-        mHolderDataIdMap.put(dataId, holder);
-    }
-
-    private int getEzyerViewIdForClass(Class<?> cls) {
+    private static int getEzyerViewIdForClass(Class<?> cls) {
         if (cls == null) {
             return 0;
         }
@@ -101,15 +104,20 @@ public class EzyerViewHolder {
             Class<?> fieldType = field.getType();
             if (EzyerViewHolder.class.isAssignableFrom(fieldType)) {
                 Class<? extends EzyerViewHolder> childFieldType = (Class<? extends EzyerViewHolder>) fieldType;
-                int dataId = ezyerView.dataId();
+//                int dataId = ezyerView.dataId();
+                int resourceId = ezyerView.resourceId();
+                if (resourceId == 0) {
+                    continue;
+                }
 
-                EzyerViewHolder childHolder = initial(true, childFieldType, getView());
+                EzyerViewHolder childHolder = initial(true, childFieldType, findViewById(resourceId));
 
                 if (childHolder == null) {
                     continue;
                 }
 
-                pair(dataId, childHolder);
+                mHolderViewIdMap.put(resourceId, childHolder);
+//                pair(dataId, childHolder);
             } else {
                 field.setAccessible(true);
                 int resourceId = ezyerView.resourceId();
@@ -120,10 +128,12 @@ public class EzyerViewHolder {
                 View fieldView = view.findViewById(resourceId);
                 try {
                     field.set(this, fieldView);
-                    int dataId = ezyerView.dataId();
-                    if (dataId != -1) {
-                        pair(dataId, resourceId);
-                    }
+
+                    mViewResIdMap.put(resourceId, view);
+//                    int dataId = ezyerView.dataId();
+//                    if (dataId != -1) {
+//                        pair(dataId, resourceId);
+//                    }
 
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -137,12 +147,16 @@ public class EzyerViewHolder {
         return mRootView;
     }
 
-    public final EzyerViewHolder findHolderByDataId(int dataId) {
-        return mHolderDataIdMap.get(dataId);
-    }
+//    public final EzyerViewHolder findHolderByDataId(int dataId) {
+//        return mHolderDataIdMap.get(dataId);
+//    }
+//
+//    public final <T extends View> List<T> findViewsByDataId(int dataId) {
+//        return (List<T>) mViewDataIdMap.get(dataId);
+//    }
 
-    public final <T extends View> List<T> findViewsByDataId(int dataId) {
-        return (List<T>) mViewDataIdMap.get(dataId);
+    public final <T extends EzyerViewHolder> T findHolderById(int resId) {
+        return (T) mHolderViewIdMap.get(resId);
     }
 
     public final <T extends View> T findViewById(int resId) {
@@ -156,22 +170,42 @@ public class EzyerViewHolder {
         return view;
     }
 
-    public static <T extends EzyerViewHolder> T initial(@NonNull Class<T> cls, Object... params) {
-        return initial(false, cls, params);
+    public static View inflateView(Class<? extends EzyerViewHolder> holderClass, LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
+        int resourceId = getEzyerViewIdForClass(holderClass);
+
+        if (resourceId == 0) {
+            throw new RuntimeException("No resource id found for class " + holderClass
+                    + ", did you forget to add EzyerView annotation in you class definition?");
+        }
+        View view = inflater.inflate(resourceId, parent, attachToParent);
+
+        return view;
     }
 
-    public static <T extends EzyerViewHolder> T initial(boolean allowEmpty, @NonNull Class<T> cls, Object... params) {
+    public static <T extends EzyerViewHolder> T initial(@NonNull Class<T> cls, LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
+        return initial(false, cls, inflater, parent, attachToParent);
+    }
 
-        T value = EzyerReflectionUtil.initialObject(cls, params);
+    public static <T extends EzyerViewHolder> T initial(boolean allowEmpty, @NonNull Class<T> cls, LayoutInflater inflater, ViewGroup parent, boolean attachToParent) {
+
+        View view = inflateView(cls, inflater, parent, attachToParent);
+
+        return initial(allowEmpty, cls, view);
+    }
+
+    public static <T extends EzyerViewHolder> T initial(@NonNull Class<T> cls, View view) {
+        return initial(false, cls, view);
+    }
+
+    public static <T extends EzyerViewHolder> T initial(boolean allowEmpty, @NonNull Class<T> cls, View view) {
+
+        T value = EzyerReflectionUtil.initialObject(cls, view);
         if (value == null && !allowEmpty) {
-            Class<?>[] paramTypes = new Class[params.length];
-            for (int i = 0; i < params.length; i++) {
-                paramTypes[i] = params[i].getClass();
-            }
             throw new RuntimeException("No corresponding constructor found for class " + cls
-                    + " with parameter class list:" + Arrays.toString(paramTypes));
+                    + " with parameter class list:" + View.class);
         }
 
         return value;
     }
+
 }
